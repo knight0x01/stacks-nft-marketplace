@@ -1,0 +1,45 @@
+[project]
+name = "stacks-nft-marketplace"
+description = "Decentralized NFT marketplace on Stacks blockchain"
+authors = ["knight0x01"]
+telemetry = false
+cache_dir = "./.cache"
+requirements = []
+[contracts.nft-marketplace]
+path = "contracts/nft-marketplace.clar"
+clarity_version = 2
+epoch = 2.4
+
+[contracts.sip-009-nft-trait]
+path = "contracts/sip-009-nft-trait.clar"
+clarity_version = 2
+epoch = 2.4
+
+[contracts.example-nft]
+path = "contracts/example-nft.clar"
+clarity_version = 2
+epoch = 2.4
+
+[contracts.nft-auction]
+path = "contracts/nft-auction.clar"
+clarity_version = 2
+epoch = 2.4
+
+[contracts.nft-escrow]
+path = "contracts/nft-escrow.clar"
+clarity_version = 2
+epoch = 2.4
+
+[contracts.nft-royalty]
+path = "contracts/nft-royalty.clar"
+clarity_version = 2
+epoch = 2.4
+
+[repl.analysis]
+passes = ["check_checker"]
+
+[repl.analysis.check_checker]
+strict = false
+trusted_sender = false
+trusted_caller = false
+callee_filter = false
