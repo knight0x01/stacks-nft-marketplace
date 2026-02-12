@@ -1,0 +1,26 @@
+{
+  "name": "stacks-nft-marketplace",
+  "version": "1.0.0",
+  "description": "Decentralized NFT marketplace on Stacks blockchain",
+  "main": "index.js",
+  "scripts": {
+    "test": "vitest run",
+    "test:watch": "vitest",
+    "deploy": "node scripts/deploy.js",
+    "mint": "node scripts/mint-nft.js",
+    "list": "node scripts/list-nft.js"
+  },
+  "keywords": ["stacks", "nft", "marketplace", "blockchain", "clarity"],
+  "author": "knight0x01",
+  "license": "MIT",
+  "dependencies": {
+    "@stacks/transactions": "^6.13.0",
+    "@stacks/network": "^6.13.0",
+    "dotenv": "^16.3.1"
+  },
+  "devDependencies": {
+    "@hirosystems/clarinet-sdk": "^2.3.2",
+    "vitest": "^1.0.4",
+    "typescript": "^5.3.3"
+  }
+}
