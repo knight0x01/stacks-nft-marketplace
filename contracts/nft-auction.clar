@@ -25,6 +25,20 @@
     }
 )
 
+(define-map bid-history
+    { auction-id: uint, bid-index: uint }
+    {
+        bidder: principal,
+        amount: uint,
+        timestamp: uint
+    }
+)
+
+(define-map bid-count
+    { auction-id: uint }
+    uint
+)
+
 (define-read-only (get-auction (auction-id uint))
     (map-get? auctions { auction-id: auction-id })
 )
