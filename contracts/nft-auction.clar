@@ -29,6 +29,24 @@
     (map-get? auctions { auction-id: auction-id })
 )
 
+(define-data-var extension-duration uint u10) ;; 10 blocks extension
+
+(define-public (extend-auction (auction-id uint) (additional-blocks uint))
+    (let
+        (
+            (auction (unwrap! (map-get? auctions { auction-id: auction-id }) err-not-found))
+        )
+        (asserts! (is-eq tx-sender (get seller auction)) err-unauthorized)
+        (asserts! (get active auction) err-auction-ended)
+        
+        (map-set auctions
+            { auction-id: auction-id }
+            (merge auction { end-block: (+ (get end-block auction) additional-blocks) })
+        )
+        (ok true)
+    )
+)
+
 (define-public (create-auction (nft-contract principal) (token-id uint) (start-price uint) (duration uint))
     (let
         (
