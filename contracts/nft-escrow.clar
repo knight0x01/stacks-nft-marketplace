@@ -88,3 +88,26 @@
         (ok true)
     )
 )
+
+(define-public (emergency-cancel (escrow-id uint))
+    (let
+        (
+            (escrow (unwrap! (map-get? escrows { escrow-id: escrow-id }) err-not-found))
+        )
+        (asserts! (or (is-eq tx-sender (get seller escrow)) (is-eq tx-sender (get buyer escrow))) err-unauthorized)
+        (asserts! (not (get completed escrow)) err-already-completed)
+        
+        ;; Refund STX if deposited
+        (if (get stx-deposited escrow)
+            (try! (as-contract (stx-transfer? (get price escrow) tx-sender (get buyer escrow))))
+            true
+        )
+        
+        ;; Mark as completed
+        (map-set escrows
+            { escrow-id: escrow-id }
+            (merge escrow { completed: true })
+        )
+        (ok true)
+    )
+)
