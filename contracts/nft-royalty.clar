@@ -38,9 +38,20 @@
     (map-get? royalties { nft-contract: nft-contract, token-id: token-id })
 )
 
+;; ---------------------------------------------------------
+;; Public Functions
+;; ---------------------------------------------------------
+
+;; @desc Configure the royalty for a specific NFT
+;; @param nft-contract: The SIP-009 principal
+;; @param token-id: The specific token ID
+;; @param percentage: Royalty in basis points (e.g., 250 = 2.5%, max 1000 = 10%)
 (define-public (set-royalty (nft-contract principal) (token-id uint) (percentage uint))
     (begin
-        (asserts! (<= percentage u1000) ERR_INVALID_PERCENTAGE) ;; Max 10%
+        ;; Validate percentage limit
+        (asserts! (<= percentage u1000) ERR_INVALID_PERCENTAGE) 
+        
+        ;; Record royalty mapping
         (map-set royalties
             { nft-contract: nft-contract, token-id: token-id }
             {
@@ -48,20 +59,33 @@
                 percentage: percentage
             }
         )
+        
+        ;; Event emission
+        (print { event: "set-royalty", nft-contract: nft-contract, token-id: token-id, creator: tx-sender, percentage: percentage })
+        
         (ok true)
     )
 )
 
+;; @desc Process royalty payment for a sale (usually called by marketplace)
+;; @param nft-contract: The SIP-009 principal
+;; @param token-id: The specific token ID
+;; @param sale-price: The total STX sale price
 (define-public (pay-royalty (nft-contract principal) (token-id uint) (sale-price uint))
     (let
         (
             (royalty-info (unwrap! (map-get? royalties { nft-contract: nft-contract, token-id: token-id }) ERR_NOT_FOUND))
             (royalty-amount (/ (* sale-price (get percentage royalty-info)) u10000))
         )
+        ;; Only transfer if the amount is greater than zero
         (if (> royalty-amount u0)
             (try! (stx-transfer? royalty-amount tx-sender (get creator royalty-info)))
             true
         )
+        
+        ;; Event emission
+        (print { event: "pay-royalty", nft-contract: nft-contract, token-id: token-id, amount: royalty-amount, recipient: (get creator royalty-info) })
+        
         (ok royalty-amount)
     )
 )
