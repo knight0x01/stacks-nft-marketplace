@@ -140,26 +140,32 @@
     )
 )
 
+;; @desc Place a bid on an active auction
+;; @param auction-id: The ID of the auction
+;; @param bid-amount: The bid amount in micro-STX
 (define-public (place-bid (auction-id uint) (bid-amount uint))
     (let
         (
             (auction (unwrap! (map-get? auctions { auction-id: auction-id }) ERR_NOT_FOUND))
         )
+        ;; Check if auction is still active
         (asserts! (get active auction) ERR_AUCTION_ENDED)
+        ;; Check if deadline has passed
         (asserts! (< block-height (get end-block auction)) ERR_AUCTION_ENDED)
+        ;; Check if bid is high enough
         (asserts! (> bid-amount (get highest-bid auction)) ERR_BID_TOO_LOW)
         (asserts! (>= bid-amount (get start-price auction)) ERR_BID_TOO_LOW)
         
-        ;; Return previous bid if exists
+        ;; Return previous bid to the previous highest bidder
         (match (get highest-bidder auction)
             prev-bidder (try! (as-contract (stx-transfer? (get highest-bid auction) tx-sender prev-bidder)))
             true
         )
         
-        ;; Lock new bid
+        ;; Lock new bid in the contract
         (try! (stx-transfer? bid-amount tx-sender (as-contract tx-sender)))
         
-        ;; Update auction
+        ;; Update auction state
         (map-set auctions
             { auction-id: auction-id }
             (merge auction {
@@ -167,6 +173,10 @@
                 highest-bidder: (some tx-sender)
             })
         )
+        
+        ;; Event emission
+        (print { event: "place-bid", auction-id: auction-id, bidder: tx-sender, amount: bid-amount })
+        
         (ok true)
     )
 )
