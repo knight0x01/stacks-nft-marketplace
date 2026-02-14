@@ -49,7 +49,11 @@
     }
 )
 
-;; Read-only functions
+;; ---------------------------------------------------------
+;; Read-Only Functions
+;; ---------------------------------------------------------
+
+;; Check if a collection principal is currently verified
 (define-read-only (is-verified (collection principal))
     (match (map-get? verified-collections { collection: collection })
         verified-data (get verified verified-data)
@@ -57,12 +61,22 @@
     )
 )
 
+;; Get full verification details for a specific collection
 (define-read-only (get-verification-info (collection principal))
     (map-get? verified-collections { collection: collection })
 )
 
+;; Get the current fee for requesting a verification
 (define-read-only (get-verification-fee)
     (ok (var-get verification-fee))
+)
+
+;; Helper to retrieve the current status of a verification request
+(define-read-only (get-request-status (collection principal))
+    (match (map-get? verification-requests { collection: collection })
+        request (some (get status request))
+        none
+    )
 )
 
 ;; Public functions
