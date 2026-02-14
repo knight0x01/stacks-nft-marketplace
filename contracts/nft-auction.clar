@@ -48,6 +48,7 @@
     }
 )
 
+;; Keep track of all bids placed for each auction
 (define-map bid-history
     { auction-id: uint, bid-index: uint }
     {
@@ -57,6 +58,7 @@
     }
 )
 
+;; Total number of bids per auction
 (define-map bid-count
     { auction-id: uint }
     uint
