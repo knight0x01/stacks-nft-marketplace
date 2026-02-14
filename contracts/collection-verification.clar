@@ -17,10 +17,18 @@
 (define-constant ERR_ALREADY_VERIFIED (err u502))
 (define-constant ERR_NOT_VERIFIED (err u503))
 
+;; ---------------------------------------------------------
 ;; Data Variables
-(define-data-var verification-fee uint u1000000) ;; 1 STX
+;; ---------------------------------------------------------
 
+;; The fee required to request collection verification (in micro-STX)
+(define-data-var verification-fee uint u1000000) ;; Default 1 STX
+
+;; ---------------------------------------------------------
 ;; Data Maps
+;; ---------------------------------------------------------
+
+;; Store details of verified NFT collections
 (define-map verified-collections
     { collection: principal }
     {
@@ -31,6 +39,7 @@
     }
 )
 
+;; Store pending and processed verification requests
 (define-map verification-requests
     { collection: principal }
     {
