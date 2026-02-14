@@ -82,19 +82,28 @@
     )
 )
 
-;; Public functions
+;; ---------------------------------------------------------
+;; Public Functions
+;; ---------------------------------------------------------
+
+;; @desc Create a new STX offer for a specific NFT
+;; @param nft-contract: The SIP-009 NFT contract principal
+;; @param token-id: The ID of the token
+;; @param amount: The offer amount in micro-STX
+;; @param duration: The number of blocks until the offer expires
 (define-public (create-offer (nft-contract principal) (token-id uint) (amount uint) (duration uint))
     (let
         (
             (new-id (+ (var-get offer-nonce) u1))
             (expiration (+ block-height duration))
         )
+        ;; Validate amount
         (asserts! (> amount u0) ERR_INVALID_AMOUNT)
         
-        ;; Lock STX
+        ;; Lock the offered STX in the contract
         (try! (stx-transfer? amount tx-sender (as-contract tx-sender)))
         
-        ;; Store offer
+        ;; Store offer details in the map
         (map-set offers
             { offer-id: new-id }
             {
@@ -107,7 +116,12 @@
             }
         )
         
+        ;; Update offer counter
         (var-set offer-nonce new-id)
+        
+        ;; Event emission
+        (print { event: "create-offer", offer-id: new-id, offerer: tx-sender, amount: amount, expiration: expiration })
+        
         (ok new-id)
     )
 )
