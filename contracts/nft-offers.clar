@@ -1,14 +1,23 @@
-;; nft-offers.clar
-;; Offer system for NFTs allowing users to make offers on any NFT
+;; ---------------------------------------------------------
+;; NFT Offer System
+;; ---------------------------------------------------------
+;; This contract allows users to place custom STX offers on any SIP-009 NFT.
+;; Offers lock STX in the contract and specify an expiration block.
+;; Owners can accept, reject or ignore offers. Offerers can cancel.
+;; ---------------------------------------------------------
 
-;; Constants
-(define-constant contract-owner tx-sender)
-(define-constant err-owner-only (err u400))
-(define-constant err-not-found (err u401))
-(define-constant err-unauthorized (err u402))
-(define-constant err-expired (err u403))
-(define-constant err-invalid-amount (err u404))
-(define-constant err-offer-exists (err u405))
+;; ---------------------------------------------------------
+;; Constants & Error Codes
+;; ---------------------------------------------------------
+(define-constant CONTRACT_OWNER tx-sender)
+
+;; Error Codes
+(define-constant ERR_OWNER_ONLY (err u400))
+(define-constant ERR_NOT_FOUND (err u401))
+(define-constant ERR_UNAUTHORIZED (err u402))
+(define-constant ERR_EXPIRED (err u403))
+(define-constant ERR_INVALID_AMOUNT (err u404))
+(define-constant ERR_OFFER_EXISTS (err u405))
 
 ;; Data Variables
 (define-data-var offer-nonce uint u0)
@@ -56,7 +65,7 @@
             (new-id (+ (var-get offer-nonce) u1))
             (expiration (+ block-height duration))
         )
-        (asserts! (> amount u0) err-invalid-amount)
+        (asserts! (> amount u0) ERR_INVALID_AMOUNT)
         
         ;; Lock STX
         (try! (stx-transfer? amount tx-sender (as-contract tx-sender)))
@@ -82,10 +91,10 @@
 (define-public (accept-offer (offer-id uint))
     (let
         (
-            (offer (unwrap! (map-get? offers { offer-id: offer-id }) err-not-found))
+            (offer (unwrap! (map-get? offers { offer-id: offer-id }) ERR_NOT_FOUND))
         )
-        (asserts! (get active offer) err-not-found)
-        (asserts! (< block-height (get expiration offer)) err-expired)
+        (asserts! (get active offer) ERR_NOT_FOUND)
+        (asserts! (< block-height (get expiration offer)) ERR_EXPIRED)
         
         ;; Transfer STX to NFT owner (tx-sender)
         (try! (as-contract (stx-transfer? (get amount offer) tx-sender tx-sender)))
@@ -102,10 +111,10 @@
 (define-public (cancel-offer (offer-id uint))
     (let
         (
-            (offer (unwrap! (map-get? offers { offer-id: offer-id }) err-not-found))
+            (offer (unwrap! (map-get? offers { offer-id: offer-id }) ERR_NOT_FOUND))
         )
-        (asserts! (is-eq tx-sender (get offerer offer)) err-unauthorized)
-        (asserts! (get active offer) err-not-found)
+        (asserts! (is-eq tx-sender (get offerer offer)) ERR_UNAUTHORIZED)
+        (asserts! (get active offer) ERR_NOT_FOUND)
         
         ;; Refund STX
         (try! (as-contract (stx-transfer? (get amount offer) tx-sender (get offerer offer))))
@@ -122,9 +131,9 @@
 (define-public (reject-offer (offer-id uint))
     (let
         (
-            (offer (unwrap! (map-get? offers { offer-id: offer-id }) err-not-found))
+            (offer (unwrap! (map-get? offers { offer-id: offer-id }) ERR_NOT_FOUND))
         )
-        (asserts! (get active offer) err-not-found)
+        (asserts! (get active offer) ERR_NOT_FOUND)
         
         ;; Refund STX to offerer
         (try! (as-contract (stx-transfer? (get amount offer) tx-sender (get offerer offer))))
