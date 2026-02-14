@@ -154,22 +154,30 @@
     )
 )
 
+;; @desc Cancel an offer (can only be called by the offerer)
+;; @param offer-id: The ID of the offer being canceled
 (define-public (cancel-offer (offer-id uint))
     (let
         (
             (offer (unwrap! (map-get? offers { offer-id: offer-id }) ERR_NOT_FOUND))
         )
+        ;; Check if the caller is the original offerer
         (asserts! (is-eq tx-sender (get offerer offer)) ERR_UNAUTHORIZED)
+        ;; Check if offer is still active
         (asserts! (get active offer) ERR_NOT_FOUND)
         
-        ;; Refund STX
+        ;; Refund the locked STX back to the offerer
         (try! (as-contract (stx-transfer? (get amount offer) tx-sender (get offerer offer))))
         
-        ;; Mark offer as inactive
+        ;; Mark the offer as inactive
         (map-set offers
             { offer-id: offer-id }
             (merge offer { active: false })
         )
+        
+        ;; Event emission
+        (print { event: "cancel-offer", offer-id: offer-id, offerer: tx-sender })
+        
         (ok true)
     )
 )
