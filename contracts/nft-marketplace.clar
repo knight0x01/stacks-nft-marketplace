@@ -1,8 +1,17 @@
-;; nft-marketplace.clar
-;; A decentralized NFT marketplace on Stacks blockchain
+;; ---------------------------------------------------------
+;; NFT Marketplace Contract
+;; ---------------------------------------------------------
+;; A decentralized marketplace for SIP-009 NFTs on the Stacks blockchain.
+;; This contract allows users to list NFTs for sale, purchase listed NFTs,
+;; and manage platform-wide settings like fees and pausing.
+;; ---------------------------------------------------------
 
-;; Constants
+;; ---------------------------------------------------------
+;; Constants & Error Codes
+;; ---------------------------------------------------------
 (define-constant contract-owner tx-sender)
+
+;; Error Codes
 (define-constant err-owner-only (err u100))
 (define-constant err-not-found (err u101))
 (define-constant err-listing-exists (err u102))
