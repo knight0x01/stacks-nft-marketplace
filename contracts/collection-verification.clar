@@ -79,15 +79,22 @@
     )
 )
 
-;; Public functions
+;; ---------------------------------------------------------
+;; Public Functions
+;; ---------------------------------------------------------
+
+;; @desc Submit a request to have a collection verified
+;; @param collection: The principal of the NFT collection contract
+;; @param metadata-uri: External link to collection metadata
 (define-public (request-verification (collection principal) (metadata-uri (string-ascii 256)))
     (begin
+        ;; Validate that it's not already verified
         (asserts! (is-none (map-get? verified-collections { collection: collection })) ERR_ALREADY_VERIFIED)
         
-        ;; Pay verification fee
+        ;; Payout the verification fee to the contract owner
         (try! (stx-transfer? (var-get verification-fee) tx-sender CONTRACT_OWNER))
         
-        ;; Store verification request
+        ;; Save the request state
         (map-set verification-requests
             { collection: collection }
             {
@@ -96,14 +103,22 @@
                 status: "pending"
             }
         )
+        
+        ;; Event emission
+        (print { event: "request-verification", collection: collection, requester: tx-sender })
         (ok true)
     )
 )
 
+;; @desc Approve a collection verification (Admin only)
+;; @param collection: The principal of the collection
+;; @param metadata-uri: The verified metadata URI
 (define-public (verify-collection (collection principal) (metadata-uri (string-ascii 256)))
     (begin
+        ;; Admin authorization
         (asserts! (is-eq tx-sender CONTRACT_OWNER) ERR_OWNER_ONLY)
         
+        ;; Mark as verified
         (map-set verified-collections
             { collection: collection }
             {
@@ -114,7 +129,7 @@
             }
         )
         
-        ;; Update request status
+        ;; Update the request status if it exists
         (match (map-get? verification-requests { collection: collection })
             request (map-set verification-requests
                 { collection: collection }
@@ -122,15 +137,23 @@
             )
             true
         )
+        
+        ;; Event emission
+        (print { event: "verify-collection", collection: collection, verifier: tx-sender })
         (ok true)
     )
 )
 
+;; @desc Revoke a previously granted verification (Admin only)
+;; @param collection: The principal of the collection
 (define-public (revoke-verification (collection principal))
     (begin
+        ;; Admin check
         (asserts! (is-eq tx-sender CONTRACT_OWNER) ERR_OWNER_ONLY)
+        ;; Existence check
         (asserts! (is-verified collection) ERR_NOT_VERIFIED)
         
+        ;; Mark as unverified
         (map-set verified-collections
             { collection: collection }
             {
@@ -140,6 +163,9 @@
                 metadata-uri: ""
             }
         )
+        
+        ;; Event emission
+        (print { event: "revoke-verification", collection: collection, revoked-by: tx-sender })
         (ok true)
     )
 )
