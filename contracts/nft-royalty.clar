@@ -1,10 +1,24 @@
-;; nft-royalty.clar
-;; NFT royalty management system
+;; ---------------------------------------------------------
+;; NFT Royalty Contract
+;; ---------------------------------------------------------
+;; This contract manages the distribution of secondary sale
+;; royalties to NFT creators. It supports setting royalty
+;; percentages and processing payments.
+;; ---------------------------------------------------------
 
-(define-constant err-unauthorized (err u400))
-(define-constant err-invalid-percentage (err u401))
-(define-constant err-not-found (err u402))
+;; ---------------------------------------------------------
+;; Constants & Error Codes
+;; ---------------------------------------------------------
+;; Error Codes
+(define-constant ERR_UNAUTHORIZED (err u400))
+(define-constant ERR_INVALID_PERCENTAGE (err u401))
+(define-constant ERR_NOT_FOUND (err u402))
 
+;; ---------------------------------------------------------
+;; Data Maps
+;; ---------------------------------------------------------
+
+;; Store creator address and royalty percentage (basis points) for each NFT
 (define-map royalties
     { nft-contract: principal, token-id: uint }
     {
@@ -19,7 +33,7 @@
 
 (define-public (set-royalty (nft-contract principal) (token-id uint) (percentage uint))
     (begin
-        (asserts! (<= percentage u1000) err-invalid-percentage) ;; Max 10%
+        (asserts! (<= percentage u1000) ERR_INVALID_PERCENTAGE) ;; Max 10%
         (map-set royalties
             { nft-contract: nft-contract, token-id: token-id }
             {
@@ -34,7 +48,7 @@
 (define-public (pay-royalty (nft-contract principal) (token-id uint) (sale-price uint))
     (let
         (
-            (royalty-info (unwrap! (map-get? royalties { nft-contract: nft-contract, token-id: token-id }) err-not-found))
+            (royalty-info (unwrap! (map-get? royalties { nft-contract: nft-contract, token-id: token-id }) ERR_NOT_FOUND))
             (royalty-amount (/ (* sale-price (get percentage royalty-info)) u10000))
         )
         (if (> royalty-amount u0)
