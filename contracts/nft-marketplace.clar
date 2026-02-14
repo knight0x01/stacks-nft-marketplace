@@ -80,27 +80,36 @@
     bool
 )
 
-;; Read-only functions
+;; ---------------------------------------------------------
+;; Read-Only Functions
+;; ---------------------------------------------------------
+
+;; Get details for a specific listing
 (define-read-only (get-listing (listing-id uint))
     (map-get? listings { listing-id: listing-id })
 )
 
+;; Get the current platform fee percentage
 (define-read-only (get-platform-fee)
     (ok (var-get platform-fee-percent))
 )
 
+;; Check if the contract is currently paused
 (define-read-only (is-contract-paused)
     (ok (var-get is-paused))
 )
 
+;; Retrieve price history for a specific NFT index
 (define-read-only (get-price-history (nft-contract principal) (token-id uint) (index uint))
     (map-get? price-history { nft-contract: nft-contract, token-id: token-id, index: index })
 )
 
+;; Get total number of price history entries for an NFT
 (define-read-only (get-price-history-count (nft-contract principal) (token-id uint))
     (default-to u0 (map-get? price-history-count { nft-contract: nft-contract, token-id: token-id }))
 )
 
+;; Calculate the average sale price for an NFT (currently limited by fold)
 (define-read-only (get-average-price (nft-contract principal) (token-id uint))
     (let
         (
@@ -113,10 +122,12 @@
     )
 )
 
+;; Check if a listing is promoted
 (define-read-only (is-featured (listing-id uint))
     (default-to false (map-get? featured-listings { listing-id: listing-id }))
 )
 
+;; Get the current fee for featuring a listing
 (define-read-only (get-featured-fee)
     (ok (var-get featured-fee))
 )
