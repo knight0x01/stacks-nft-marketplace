@@ -132,16 +132,24 @@
     (ok (var-get featured-fee))
 )
 
-;; Public functions
+;; ---------------------------------------------------------
+;; Public Functions
+;; ---------------------------------------------------------
+
+;; @desc Create a new listing for an NFT
+;; @param nft-contract: The principal of the SIP-009 NFT contract
+;; @param token-id: The ID of the token being listed
+;; @param price: The sale price in micro-STX
 (define-public (create-listing (nft-contract principal) (token-id uint) (price uint))
     (let
         (
             (new-id (+ (var-get listing-nonce) u1))
         )
+        ;; Assertions
         (asserts! (not (var-get is-paused)) err-paused)
         (asserts! (> price u0) err-invalid-price)
         
-        ;; Store listing
+        ;; Record the new listing
         (map-set listings
             { listing-id: new-id }
             {
@@ -154,13 +162,13 @@
             }
         )
         
-        ;; Track user listing
+        ;; Add to user's listing tracking
         (map-set user-listings
             { user: tx-sender, listing-id: new-id }
             true
         )
         
-        ;; Record price history
+        ;; Update price history for market analytics
         (let
             (
                 (history-count (get-price-history-count nft-contract token-id))
@@ -180,7 +188,12 @@
             )
         )
         
+        ;; Finalize listing creation
         (var-set listing-nonce new-id)
+        
+        ;; Event emission
+        (print { event: "create-listing", listing-id: new-id, seller: tx-sender, price: price })
+        
         (ok new-id)
     )
 )
