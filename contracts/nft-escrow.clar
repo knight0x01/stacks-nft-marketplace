@@ -89,22 +89,30 @@
     )
 )
 
+;; @desc Allow the buyer to deposit STX into the escrow
+;; @param escrow-id: The unique ID of the escrow
 (define-public (deposit-stx (escrow-id uint))
     (let
         (
             (escrow (unwrap! (map-get? escrows { escrow-id: escrow-id }) ERR_NOT_FOUND))
         )
+        ;; Authorization check
         (asserts! (is-eq tx-sender (get buyer escrow)) ERR_UNAUTHORIZED)
+        ;; Double deposit check
         (asserts! (not (get completed escrow)) ERR_ALREADY_COMPLETED)
         
         ;; Transfer STX to contract
         (try! (stx-transfer? (get price escrow) tx-sender (as-contract tx-sender)))
         
-        ;; Update escrow
+        ;; Update escrow state
         (map-set escrows
             { escrow-id: escrow-id }
             (merge escrow { stx-deposited: true })
         )
+        
+        ;; Event emission
+        (print { event: "deposit-stx", escrow-id: escrow-id, buyer: tx-sender, amount: (get price escrow) })
+        
         (ok true)
     )
 )
