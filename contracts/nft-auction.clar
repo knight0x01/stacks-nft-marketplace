@@ -75,28 +75,47 @@
 
 
 
+;; ---------------------------------------------------------
+;; Public Functions
+;; ---------------------------------------------------------
+
+;; @desc Manually extend an auction's duration
+;; @param auction-id: The ID of the auction
+;; @param additional-blocks: Number of blocks to add to the deadline
 (define-public (extend-auction (auction-id uint) (additional-blocks uint))
     (let
         (
             (auction (unwrap! (map-get? auctions { auction-id: auction-id }) ERR_NOT_FOUND))
         )
+        ;; Only seller can manually extend
         (asserts! (is-eq tx-sender (get seller auction)) ERR_UNAUTHORIZED)
+        ;; Auction must be active
         (asserts! (get active auction) ERR_AUCTION_ENDED)
         
+        ;; Update end block
         (map-set auctions
             { auction-id: auction-id }
             (merge auction { end-block: (+ (get end-block auction) additional-blocks) })
         )
+        
+        ;; Event emission
+        (print { event: "extend-auction", auction-id: auction-id, additional-blocks: additional-blocks })
         (ok true)
     )
 )
 
+;; @desc Create a new English auction for an NFT
+;; @param nft-contract: SIP-009 contract
+;; @param token-id: Token ID to auction
+;; @param start-price: Minimum starting bid
+;; @param duration: Auction length in blocks
 (define-public (create-auction (nft-contract principal) (token-id uint) (start-price uint) (duration uint))
     (let
         (
             (new-id (+ (var-get auction-nonce) u1))
             (end-block (+ block-height duration))
         )
+        ;; Store auction details
         (map-set auctions
             { auction-id: new-id }
             {
@@ -110,7 +129,13 @@
                 active: true
             }
         )
+        
+        ;; Increment counter
         (var-set auction-nonce new-id)
+        
+        ;; Event emission
+        (print { event: "create-auction", auction-id: new-id, seller: tx-sender, start-price: start-price })
+        
         (ok new-id)
     )
 )
