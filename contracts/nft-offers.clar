@@ -182,21 +182,28 @@
     )
 )
 
+;; @desc Reject an offer (can be called by anyone, but effectively only useful if the offer should be cleared)
+;; @param offer-id: The ID of the offer to reject
 (define-public (reject-offer (offer-id uint))
     (let
         (
             (offer (unwrap! (map-get? offers { offer-id: offer-id }) ERR_NOT_FOUND))
         )
+        ;; Check if offer is active
         (asserts! (get active offer) ERR_NOT_FOUND)
         
-        ;; Refund STX to offerer
+        ;; Refund the locked STX back to the original offerer
         (try! (as-contract (stx-transfer? (get amount offer) tx-sender (get offerer offer))))
         
-        ;; Mark offer as inactive
+        ;; Mark the offer as inactive
         (map-set offers
             { offer-id: offer-id }
             (merge offer { active: false })
         )
+        
+        ;; Event emission
+        (print { event: "reject-offer", offer-id: offer-id, offerer: (get offerer offer), rejected-by: tx-sender })
+        
         (ok true)
     )
 )
