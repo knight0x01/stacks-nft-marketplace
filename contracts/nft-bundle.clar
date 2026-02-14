@@ -1,11 +1,20 @@
-;; nft-bundle.clar
-;; Bundle multiple NFTs for sale together
+;; ---------------------------------------------------------
+;; NFT Bundle Contract
+;; ---------------------------------------------------------
+;; This contract allows users to bundle multiple NFTs and sell them
+;; together for a single STX price. 
+;; ---------------------------------------------------------
 
-(define-constant contract-owner tx-sender)
-(define-constant err-owner-only (err u700))
-(define-constant err-not-found (err u701))
-(define-constant err-unauthorized (err u702))
-(define-constant err-invalid-bundle (err u703))
+;; ---------------------------------------------------------
+;; Constants & Error Codes
+;; ---------------------------------------------------------
+(define-constant CONTRACT_OWNER tx-sender)
+
+;; Error Codes
+(define-constant ERR_OWNER_ONLY (err u700))
+(define-constant ERR_NOT_FOUND (err u701))
+(define-constant ERR_UNAUTHORIZED (err u702))
+(define-constant ERR_INVALID_BUNDLE (err u703))
 
 (define-data-var bundle-nonce uint u0)
 
@@ -36,7 +45,7 @@
         (
             (new-id (+ (var-get bundle-nonce) u1))
         )
-        (asserts! (> nft-count u0) err-invalid-bundle)
+        (asserts! (> nft-count u0) ERR_INVALID_BUNDLE)
         
         (map-set bundles
             { bundle-id: new-id }
@@ -55,10 +64,10 @@
 (define-public (add-nft-to-bundle (bundle-id uint) (index uint) (nft-contract principal) (token-id uint))
     (let
         (
-            (bundle (unwrap! (map-get? bundles { bundle-id: bundle-id }) err-not-found))
+            (bundle (unwrap! (map-get? bundles { bundle-id: bundle-id }) ERR_NOT_FOUND))
         )
-        (asserts! (is-eq tx-sender (get seller bundle)) err-unauthorized)
-        (asserts! (< index (get nft-count bundle)) err-invalid-bundle)
+        (asserts! (is-eq tx-sender (get seller bundle)) ERR_UNAUTHORIZED)
+        (asserts! (< index (get nft-count bundle)) ERR_INVALID_BUNDLE)
         
         (map-set bundle-nfts
             { bundle-id: bundle-id, index: index }
@@ -74,9 +83,9 @@
 (define-public (purchase-bundle (bundle-id uint))
     (let
         (
-            (bundle (unwrap! (map-get? bundles { bundle-id: bundle-id }) err-not-found))
+            (bundle (unwrap! (map-get? bundles { bundle-id: bundle-id }) ERR_NOT_FOUND))
         )
-        (asserts! (get active bundle) err-not-found)
+        (asserts! (get active bundle) ERR_NOT_FOUND)
         
         ;; Transfer STX
         (try! (stx-transfer? (get price bundle) tx-sender (get seller bundle)))
