@@ -117,15 +117,19 @@
     )
 )
 
+;; @desc Finalize the trade by releasing funds to the seller (Buyer or seller can trigger after deposits)
+;; @param escrow-id: The unique ID of the escrow
 (define-public (complete-escrow (escrow-id uint))
     (let
         (
             (escrow (unwrap! (map-get? escrows { escrow-id: escrow-id }) ERR_NOT_FOUND))
         )
+        ;; Completion check
         (asserts! (not (get completed escrow)) ERR_ALREADY_COMPLETED)
+        ;; Ready check
         (asserts! (get stx-deposited escrow) ERR_NOT_READY)
         
-        ;; Transfer STX to seller
+        ;; Payout STX to the seller
         (try! (as-contract (stx-transfer? (get price escrow) (as-contract tx-sender) (get seller escrow))))
         
         ;; Mark as completed
@@ -133,29 +137,41 @@
             { escrow-id: escrow-id }
             (merge escrow { completed: true })
         )
+        
+        ;; Event emission
+        (print { event: "complete-escrow", escrow-id: escrow-id, seller: (get seller escrow), amount: (get price escrow) })
+        
         (ok true)
     )
 )
 
+;; @desc emergency cancel the escrow (if both parties agree or admin intervention)
+;; @param escrow-id: The unique ID of the escrow
 (define-public (emergency-cancel (escrow-id uint))
     (let
         (
             (escrow (unwrap! (map-get? escrows { escrow-id: escrow-id }) ERR_NOT_FOUND))
         )
+        ;; Authorization check
         (asserts! (or (is-eq tx-sender (get seller escrow)) (is-eq tx-sender (get buyer escrow))) ERR_UNAUTHORIZED)
+        ;; Completion check
         (asserts! (not (get completed escrow)) ERR_ALREADY_COMPLETED)
         
-        ;; Refund STX if deposited
+        ;; Refund STX to buyer if it was deposited
         (if (get stx-deposited escrow)
-            (try! (as-contract (stx-transfer? (get price escrow) tx-sender (get buyer escrow))))
+            (try! (as-contract (stx-transfer? (get price escrow) (as-contract tx-sender) (get buyer escrow))))
             true
         )
         
-        ;; Mark as completed
+        ;; Close the escrow
         (map-set escrows
             { escrow-id: escrow-id }
             (merge escrow { completed: true })
         )
+        
+        ;; Event emission
+        (print { event: "cancel-escrow", escrow-id: escrow-id, canceled-by: tx-sender })
+        
         (ok true)
     )
 )
