@@ -19,10 +19,18 @@
 (define-constant ERR_INVALID_AMOUNT (err u404))
 (define-constant ERR_OFFER_EXISTS (err u405))
 
+;; ---------------------------------------------------------
 ;; Data Variables
+;; ---------------------------------------------------------
+
+;; Counter for generating unique offer IDs
 (define-data-var offer-nonce uint u0)
 
+;; ---------------------------------------------------------
 ;; Data Maps
+;; ---------------------------------------------------------
+
+;; Store all details for each specific offer
 (define-map offers
     { offer-id: uint }
     {
@@ -35,11 +43,13 @@
     }
 )
 
+;; Track IDs of all offers made on a specific NFT (max 20)
 (define-map nft-offers
     { nft-contract: principal, token-id: uint }
     (list 20 uint)
 )
 
+;; Track IDs of all offers made by a specific user (max 50)
 (define-map user-offers
     { user: principal }
     (list 50 uint)
