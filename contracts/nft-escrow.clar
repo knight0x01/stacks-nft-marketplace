@@ -50,11 +50,21 @@
     (map-get? escrows { escrow-id: escrow-id })
 )
 
+;; ---------------------------------------------------------
+;; Public Functions
+;; ---------------------------------------------------------
+
+;; @desc Initialize a new escrow agreement
+;; @param nft-contract: The SIP-009 principal
+;; @param token-id: The specific token ID
+;; @param buyer: The principal expected to pay
+;; @param price: The amount in micro-STX
 (define-public (create-escrow (nft-contract principal) (token-id uint) (buyer principal) (price uint))
     (let
         (
             (new-id (+ (var-get escrow-nonce) u1))
         )
+        ;; Store escrow details
         (map-set escrows
             { escrow-id: new-id }
             {
@@ -68,7 +78,13 @@
                 completed: false
             }
         )
+        
+        ;; Increment nonce
         (var-set escrow-nonce new-id)
+        
+        ;; Event emission
+        (print { event: "create-escrow", escrow-id: new-id, seller: tx-sender, buyer: buyer, price: price })
+        
         (ok new-id)
     )
 )
