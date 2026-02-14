@@ -55,17 +55,31 @@
     (list 50 uint)
 )
 
-;; Read-only functions
+;; ---------------------------------------------------------
+;; Read-Only Functions
+;; ---------------------------------------------------------
+
+;; Retrieve full details for a specific offer
 (define-read-only (get-offer (offer-id uint))
     (map-get? offers { offer-id: offer-id })
 )
 
+;; Get list of all offer IDs for a specific NFT
 (define-read-only (get-nft-offers (nft-contract principal) (token-id uint))
     (default-to (list) (map-get? nft-offers { nft-contract: nft-contract, token-id: token-id }))
 )
 
+;; Get list of all offer IDs created by a specific user
 (define-read-only (get-user-offers (user principal))
     (default-to (list) (map-get? user-offers { user: user }))
+)
+
+;; Helper to check if a specific offer is still active
+(define-read-only (is-offer-active (offer-id uint))
+    (match (get-offer offer-id)
+        offer (get active offer)
+        false
+    )
 )
 
 ;; Public functions
