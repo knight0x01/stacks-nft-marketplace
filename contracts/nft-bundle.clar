@@ -101,14 +101,22 @@
     )
 )
 
+;; @desc Add a specific NFT to a previously created bundle
+;; @param bundle-id: The unique ID of the bundle
+;; @param index: The position (0 to count-1) in the bundle
+;; @param nft-contract: The SIP-009 principal of the NFT
+;; @param token-id: The specific token ID
 (define-public (add-nft-to-bundle (bundle-id uint) (index uint) (nft-contract principal) (token-id uint))
     (let
         (
             (bundle (unwrap! (map-get? bundles { bundle-id: bundle-id }) ERR_NOT_FOUND))
         )
+        ;; Ownership check
         (asserts! (is-eq tx-sender (get seller bundle)) ERR_UNAUTHORIZED)
+        ;; Bound check
         (asserts! (< index (get nft-count bundle)) ERR_INVALID_BUNDLE)
         
+        ;; Map the NFT to the bundle slot
         (map-set bundle-nfts
             { bundle-id: bundle-id, index: index }
             {
@@ -116,6 +124,10 @@
                 token-id: token-id
             }
         )
+        
+        ;; Event emission
+        (print { event: "add-nft-to-bundle", bundle-id: bundle-id, index: index, nft-contract: nft-contract, token-id: token-id })
+        
         (ok true)
     )
 )
