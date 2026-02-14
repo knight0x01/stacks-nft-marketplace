@@ -40,6 +40,12 @@
     }
 )
 
+;; ---------------------------------------------------------
+;; Read-Only Functions
+;; ---------------------------------------------------------
+
+;; @desc Retrieve full details for a specific escrow agreement
+;; @param escrow-id: The unique ID of the escrow
 (define-read-only (get-escrow (escrow-id uint))
     (map-get? escrows { escrow-id: escrow-id })
 )
