@@ -65,13 +65,22 @@
     )
 )
 
+;; ---------------------------------------------------------
+;; Public Functions
+;; ---------------------------------------------------------
+
+;; @desc Create a new bundle for sale
+;; @param price: Total price for all NFTs in the bundle
+;; @param nft-count: Number of NFTs that will be in this bundle
 (define-public (create-bundle (price uint) (nft-count uint))
     (let
         (
             (new-id (+ (var-get bundle-nonce) u1))
         )
+        ;; Validate counts
         (asserts! (> nft-count u0) ERR_INVALID_BUNDLE)
         
+        ;; Save bundle header
         (map-set bundles
             { bundle-id: new-id }
             {
@@ -81,7 +90,13 @@
                 nft-count: nft-count
             }
         )
+        
+        ;; Update nonce
         (var-set bundle-nonce new-id)
+        
+        ;; Event emission
+        (print { event: "create-bundle", bundle-id: new-id, seller: tx-sender, price: price, count: nft-count })
+        
         (ok new-id)
     )
 )
