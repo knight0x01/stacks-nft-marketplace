@@ -59,10 +59,10 @@
 ;; Public functions
 (define-public (request-verification (collection principal) (metadata-uri (string-ascii 256)))
     (begin
-        (asserts! (is-none (map-get? verified-collections { collection: collection })) err-already-verified)
+        (asserts! (is-none (map-get? verified-collections { collection: collection })) ERR_ALREADY_VERIFIED)
         
         ;; Pay verification fee
-        (try! (stx-transfer? (var-get verification-fee) tx-sender contract-owner))
+        (try! (stx-transfer? (var-get verification-fee) tx-sender CONTRACT_OWNER))
         
         ;; Store verification request
         (map-set verification-requests
@@ -79,7 +79,7 @@
 
 (define-public (verify-collection (collection principal) (metadata-uri (string-ascii 256)))
     (begin
-        (asserts! (is-eq tx-sender contract-owner) err-owner-only)
+        (asserts! (is-eq tx-sender CONTRACT_OWNER) ERR_OWNER_ONLY)
         
         (map-set verified-collections
             { collection: collection }
@@ -105,8 +105,8 @@
 
 (define-public (revoke-verification (collection principal))
     (begin
-        (asserts! (is-eq tx-sender contract-owner) err-owner-only)
-        (asserts! (is-verified collection) err-not-verified)
+        (asserts! (is-eq tx-sender CONTRACT_OWNER) ERR_OWNER_ONLY)
+        (asserts! (is-verified collection) ERR_NOT_VERIFIED)
         
         (map-set verified-collections
             { collection: collection }
@@ -124,7 +124,7 @@
 ;; Admin functions
 (define-public (set-verification-fee (new-fee uint))
     (begin
-        (asserts! (is-eq tx-sender contract-owner) err-owner-only)
+        (asserts! (is-eq tx-sender CONTRACT_OWNER) ERR_OWNER_ONLY)
         (var-set verification-fee new-fee)
         (ok true)
     )
