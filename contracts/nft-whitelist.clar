@@ -89,21 +89,41 @@
     )
 )
 
+;; @desc Add a member to a specific whitelist (Admin only)
+;; @param whitelist-id: The unique ID of the whitelist
+;; @param member: The principal to add
 (define-public (add-to-whitelist (whitelist-id uint) (member principal))
     (begin
-        (asserts! (is-eq tx-sender contract-owner) err-owner-only)
+        ;; Admin check
+        (asserts! (is-eq tx-sender CONTRACT_OWNER) ERR_OWNER_ONLY)
+        
+        ;; Save membership
         (map-set whitelist-members
             { whitelist-id: whitelist-id, member: member }
             true
         )
+        
+        ;; Event emission
+        (print { event: "add-to-whitelist", whitelist-id: whitelist-id, member: member, added-by: tx-sender })
+        
         (ok true)
     )
 )
 
+;; @desc Remove a member from a specific whitelist (Admin only)
+;; @param whitelist-id: The unique ID of the whitelist
+;; @param member: The principal to remove
 (define-public (remove-from-whitelist (whitelist-id uint) (member principal))
     (begin
-        (asserts! (is-eq tx-sender contract-owner) err-owner-only)
+        ;; Admin check
+        (asserts! (is-eq tx-sender CONTRACT_OWNER) ERR_OWNER_ONLY)
+        
+        ;; Remove membership record
         (map-delete whitelist-members { whitelist-id: whitelist-id, member: member })
+        
+        ;; Event emission
+        (print { event: "remove-from-whitelist", whitelist-id: whitelist-id, member: member, removed-by: tx-sender })
+        
         (ok true)
     )
 )
