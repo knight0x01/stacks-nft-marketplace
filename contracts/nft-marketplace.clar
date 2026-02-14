@@ -52,11 +52,13 @@
     }
 )
 
+;; Map to track listings created by a specific user
 (define-map user-listings
     { user: principal, listing-id: uint }
     bool
 )
 
+;; Store historical sale prices for analytics and floor price calculation
 (define-map price-history
     { nft-contract: principal, token-id: uint, index: uint }
     {
@@ -66,11 +68,13 @@
     }
 )
 
+;; Counter for price records per specific NFT
 (define-map price-history-count
     { nft-contract: principal, token-id: uint }
     uint
 )
 
+;; Track listings that have been promoted via the featured fee
 (define-map featured-listings
     { listing-id: uint }
     bool
