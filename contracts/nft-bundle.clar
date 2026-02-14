@@ -132,21 +132,28 @@
     )
 )
 
+;; @desc Purchase an entire bundle of NFTs
+;; @param bundle-id: The unique ID of the bundle to buy
 (define-public (purchase-bundle (bundle-id uint))
     (let
         (
             (bundle (unwrap! (map-get? bundles { bundle-id: bundle-id }) ERR_NOT_FOUND))
         )
+        ;; Active check
         (asserts! (get active bundle) ERR_NOT_FOUND)
         
-        ;; Transfer STX
+        ;; Transfer STX from buyer to seller
         (try! (stx-transfer? (get price bundle) tx-sender (get seller bundle)))
         
-        ;; Mark as inactive
+        ;; Deactivate the bundle
         (map-set bundles
             { bundle-id: bundle-id }
             (merge bundle { active: false })
         )
+        
+        ;; Event emission
+        (print { event: "purchase-bundle", bundle-id: bundle-id, buyer: tx-sender, seller: (get seller bundle), price: (get price bundle) })
+        
         (ok true)
     )
 )
