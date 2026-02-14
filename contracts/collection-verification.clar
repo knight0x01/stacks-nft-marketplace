@@ -1,12 +1,21 @@
-;; collection-verification.clar
-;; Verification system for trusted NFT collections
+;; ---------------------------------------------------------
+;; Collection Verification Contract
+;; ---------------------------------------------------------
+;; This contract defines a trust layer for the NFT marketplace.
+;; It allows the contract owner to verify and revoke verification for
+;; specific NFT collections, providing a 'blue checkmark' system.
+;; ---------------------------------------------------------
 
-;; Constants
-(define-constant contract-owner tx-sender)
-(define-constant err-owner-only (err u500))
-(define-constant err-not-found (err u501))
-(define-constant err-already-verified (err u502))
-(define-constant err-not-verified (err u503))
+;; ---------------------------------------------------------
+;; Constants & Error Codes
+;; ---------------------------------------------------------
+(define-constant CONTRACT_OWNER tx-sender)
+
+;; Error Codes
+(define-constant ERR_OWNER_ONLY (err u500))
+(define-constant ERR_NOT_FOUND (err u501))
+(define-constant ERR_ALREADY_VERIFIED (err u502))
+(define-constant ERR_NOT_VERIFIED (err u503))
 
 ;; Data Variables
 (define-data-var verification-fee uint u1000000) ;; 1 STX
