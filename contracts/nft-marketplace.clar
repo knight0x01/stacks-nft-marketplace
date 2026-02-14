@@ -19,13 +19,27 @@
 (define-constant err-invalid-price (err u104))
 (define-constant err-paused (err u105))
 
+;; ---------------------------------------------------------
 ;; Data Variables
-(define-data-var platform-fee-percent uint u250) ;; 2.5%
-(define-data-var is-paused bool false)
-(define-data-var listing-nonce uint u0)
-(define-data-var featured-fee uint u5000000) ;; 5 STX to feature a listing
+;; ---------------------------------------------------------
 
+;; Platform fee in basis points (e.g., 250 = 2.5%)
+(define-data-var platform-fee-percent uint u250)
+
+;; Circuit breaker status
+(define-data-var is-paused bool false)
+
+;; Continuous counter for unique listing IDs
+(define-data-var listing-nonce uint u0)
+
+;; Charge for featuring a listing on the homepage (in micro-STX)
+(define-data-var featured-fee uint u5000000) ;; 5 STX
+
+;; ---------------------------------------------------------
 ;; Data Maps
+;; ---------------------------------------------------------
+
+;; Store all details for each NFT listing
 (define-map listings
     { listing-id: uint }
     {
