@@ -64,6 +64,11 @@
     uint
 )
 
+;; ---------------------------------------------------------
+;; Read-Only Functions
+;; ---------------------------------------------------------
+
+;; Retrieve information for a specific auction
 (define-read-only (get-auction (auction-id uint))
     (map-get? auctions { auction-id: auction-id })
 )
