@@ -126,22 +126,30 @@
     )
 )
 
+;; @desc Accept an offer (must be called by NFT owner)
+;; @param offer-id: The ID of the offer being accepted
 (define-public (accept-offer (offer-id uint))
     (let
         (
             (offer (unwrap! (map-get? offers { offer-id: offer-id }) ERR_NOT_FOUND))
         )
+        ;; Active check
         (asserts! (get active offer) ERR_NOT_FOUND)
+        ;; Expiration check
         (asserts! (< block-height (get expiration offer)) ERR_EXPIRED)
         
-        ;; Transfer STX to NFT owner (tx-sender)
+        ;; Payout the locked STX to the NFT owner (tx-sender)
         (try! (as-contract (stx-transfer? (get amount offer) tx-sender tx-sender)))
         
-        ;; Mark offer as inactive
+        ;; Deactivate the offer
         (map-set offers
             { offer-id: offer-id }
             (merge offer { active: false })
         )
+        
+        ;; Event emission
+        (print { event: "accept-offer", offer-id: offer-id, seller: tx-sender, offerer: (get offerer offer), amount: (get amount offer) })
+        
         (ok true)
     )
 )
