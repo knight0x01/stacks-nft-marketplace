@@ -19,8 +19,21 @@
 (define-constant ERR_BID_TOO_LOW (err u204))
 (define-constant ERR_UNAUTHORIZED (err u205))
 
+;; ---------------------------------------------------------
+;; Data Variables
+;; ---------------------------------------------------------
+
+;; Counter for generating unique auction IDs
 (define-data-var auction-nonce uint u0)
 
+;; Auction extension period when a bid is placed near the end
+(define-data-var extension-duration uint u10) ;; Default 10 blocks extension
+
+;; ---------------------------------------------------------
+;; Data Maps
+;; ---------------------------------------------------------
+
+;; Store all details for each auction
 (define-map auctions
     { auction-id: uint }
     {
@@ -53,7 +66,7 @@
     (map-get? auctions { auction-id: auction-id })
 )
 
-(define-data-var extension-duration uint u10) ;; 10 blocks extension
+
 
 (define-public (extend-auction (auction-id uint) (additional-blocks uint))
     (let
