@@ -16,8 +16,18 @@
 (define-constant ERR_UNAUTHORIZED (err u702))
 (define-constant ERR_INVALID_BUNDLE (err u703))
 
+;; ---------------------------------------------------------
+;; Data Variables
+;; ---------------------------------------------------------
+
+;; Counter for generating unique bundle IDs
 (define-data-var bundle-nonce uint u0)
 
+;; ---------------------------------------------------------
+;; Data Maps
+;; ---------------------------------------------------------
+
+;; Store general details for each NFT bundle
 (define-map bundles
     { bundle-id: uint }
     {
@@ -28,6 +38,7 @@
     }
 )
 
+;; Store specific NFTs contained within each bundle
 (define-map bundle-nfts
     { bundle-id: uint, index: uint }
     {
