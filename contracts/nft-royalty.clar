@@ -27,6 +27,13 @@
     }
 )
 
+;; ---------------------------------------------------------
+;; Read-Only Functions
+;; ---------------------------------------------------------
+
+;; @desc Retrieve the royalty configuration for a specific NFT
+;; @param nft-contract: The SIP-009 principal
+;; @param token-id: The specific token ID
 (define-read-only (get-royalty (nft-contract principal) (token-id uint))
     (map-get? royalties { nft-contract: nft-contract, token-id: token-id })
 )
