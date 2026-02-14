@@ -47,8 +47,22 @@
     }
 )
 
+;; ---------------------------------------------------------
+;; Read-Only Functions
+;; ---------------------------------------------------------
+
+;; @desc Retrieve general details of a specific bundle
+;; @param bundle-id: The unique bundle identifier
 (define-read-only (get-bundle (bundle-id uint))
     (map-get? bundles { bundle-id: bundle-id })
+)
+
+;; @desc Helper to check if a specific bundle is still active and for sale
+(define-read-only (is-bundle-active (bundle-id uint))
+    (match (get-bundle bundle-id)
+        bundle (get active bundle)
+        false
+    )
 )
 
 (define-public (create-bundle (price uint) (nft-count uint))
