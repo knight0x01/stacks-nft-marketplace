@@ -181,25 +181,32 @@
     )
 )
 
+;; @desc Finalize an auction after it has ended
+;; @param auction-id: The ID of the auction
 (define-public (finalize-auction (auction-id uint))
     (let
         (
             (auction (unwrap! (map-get? auctions { auction-id: auction-id }) ERR_NOT_FOUND))
         )
+        ;; Auction must be active to finalize
         (asserts! (get active auction) ERR_NOT_FOUND)
+        ;; Current block must be at or after the end block
         (asserts! (>= block-height (get end-block auction)) ERR_AUCTION_ACTIVE)
         
-        ;; Transfer STX to seller if there was a bid
+        ;; Payout to seller if there were bids
         (match (get highest-bidder auction)
             winner (try! (as-contract (stx-transfer? (get highest-bid auction) (as-contract tx-sender) (get seller auction))))
             true
         )
         
-        ;; Mark auction as inactive
+        ;; Mark auction as inactive (completed)
         (map-set auctions
             { auction-id: auction-id }
             (merge auction { active: false })
         )
+        
+        ;; Event emission
+        (print { event: "finalize-auction", auction-id: auction-id, winner: (get highest-bidder auction), amount: (get highest-bid auction) })
         (ok true)
     )
 )
