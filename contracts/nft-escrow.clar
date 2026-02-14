@@ -14,8 +14,18 @@
 (define-constant ERR_ALREADY_COMPLETED (err u302))
 (define-constant ERR_NOT_READY (err u303))
 
+;; ---------------------------------------------------------
+;; Data Variables
+;; ---------------------------------------------------------
+
+;; Counter for generating unique escrow agreement IDs
 (define-data-var escrow-nonce uint u0)
 
+;; ---------------------------------------------------------
+;; Data Maps
+;; ---------------------------------------------------------
+
+;; Store full status of each escrow agreement
 (define-map escrows
     { escrow-id: uint }
     {
