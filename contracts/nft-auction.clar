@@ -1,13 +1,23 @@
-;; nft-auction.clar
-;; English auction contract for NFTs
+;; ---------------------------------------------------------
+;; NFT Auction Contract
+;; ---------------------------------------------------------
+;; This contract implements an English Auction mechanism for SIP-009 NFTs.
+;; Sellers can create auctions with a starting price and duration.
+;; Bidders can place increasing bids, with STX being locked in the contract.
+;; ---------------------------------------------------------
 
-(define-constant contract-owner tx-sender)
-(define-constant err-owner-only (err u200))
-(define-constant err-not-found (err u201))
-(define-constant err-auction-active (err u202))
-(define-constant err-auction-ended (err u203))
-(define-constant err-bid-too-low (err u204))
-(define-constant err-unauthorized (err u205))
+;; ---------------------------------------------------------
+;; Constants & Error Codes
+;; ---------------------------------------------------------
+(define-constant CONTRACT_OWNER tx-sender)
+
+;; Error Codes
+(define-constant ERR_OWNER_ONLY (err u200))
+(define-constant ERR_NOT_FOUND (err u201))
+(define-constant ERR_AUCTION_ACTIVE (err u202))
+(define-constant ERR_AUCTION_ENDED (err u203))
+(define-constant ERR_BID_TOO_LOW (err u204))
+(define-constant ERR_UNAUTHORIZED (err u205))
 
 (define-data-var auction-nonce uint u0)
 
@@ -48,10 +58,10 @@
 (define-public (extend-auction (auction-id uint) (additional-blocks uint))
     (let
         (
-            (auction (unwrap! (map-get? auctions { auction-id: auction-id }) err-not-found))
+            (auction (unwrap! (map-get? auctions { auction-id: auction-id }) ERR_NOT_FOUND))
         )
-        (asserts! (is-eq tx-sender (get seller auction)) err-unauthorized)
-        (asserts! (get active auction) err-auction-ended)
+        (asserts! (is-eq tx-sender (get seller auction)) ERR_UNAUTHORIZED)
+        (asserts! (get active auction) ERR_AUCTION_ENDED)
         
         (map-set auctions
             { auction-id: auction-id }
@@ -88,12 +98,12 @@
 (define-public (place-bid (auction-id uint) (bid-amount uint))
     (let
         (
-            (auction (unwrap! (map-get? auctions { auction-id: auction-id }) err-not-found))
+            (auction (unwrap! (map-get? auctions { auction-id: auction-id }) ERR_NOT_FOUND))
         )
-        (asserts! (get active auction) err-auction-ended)
-        (asserts! (< block-height (get end-block auction)) err-auction-ended)
-        (asserts! (> bid-amount (get highest-bid auction)) err-bid-too-low)
-        (asserts! (>= bid-amount (get start-price auction)) err-bid-too-low)
+        (asserts! (get active auction) ERR_AUCTION_ENDED)
+        (asserts! (< block-height (get end-block auction)) ERR_AUCTION_ENDED)
+        (asserts! (> bid-amount (get highest-bid auction)) ERR_BID_TOO_LOW)
+        (asserts! (>= bid-amount (get start-price auction)) ERR_BID_TOO_LOW)
         
         ;; Return previous bid if exists
         (match (get highest-bidder auction)
@@ -119,10 +129,10 @@
 (define-public (finalize-auction (auction-id uint))
     (let
         (
-            (auction (unwrap! (map-get? auctions { auction-id: auction-id }) err-not-found))
+            (auction (unwrap! (map-get? auctions { auction-id: auction-id }) ERR_NOT_FOUND))
         )
-        (asserts! (get active auction) err-not-found)
-        (asserts! (>= block-height (get end-block auction)) err-auction-active)
+        (asserts! (get active auction) ERR_NOT_FOUND)
+        (asserts! (>= block-height (get end-block auction)) ERR_AUCTION_ACTIVE)
         
         ;; Transfer STX to seller if there was a bid
         (match (get highest-bidder auction)
