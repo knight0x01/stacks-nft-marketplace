@@ -1,31 +1,16 @@
-;; ---------------------------------------------------------
 ;; NFT Escrow Contract
-;; ---------------------------------------------------------
-;; This contract provides a secure escrow mechanism for NFT trades.
-;; It ensures that STX is locked before an NFT transfer is finalized.
-;; ---------------------------------------------------------
+;; Secure escrow mechanism for NFT trades
 
-;; ---------------------------------------------------------
-;; Constants & Error Codes
-;; ---------------------------------------------------------
-;; Error Codes
-(define-constant ERR_NOT_FOUND (err u300))
-(define-constant ERR_UNAUTHORIZED (err u301))
-(define-constant ERR_ALREADY_COMPLETED (err u302))
-(define-constant ERR_NOT_READY (err u303))
+;; Constants
+(define-constant err-not-found (err u300))
+(define-constant err-unauthorized (err u301))
+(define-constant err-already-completed (err u302))
+(define-constant err-not-ready (err u303))
 
-;; ---------------------------------------------------------
 ;; Data Variables
-;; ---------------------------------------------------------
-
-;; Counter for generating unique escrow agreement IDs
 (define-data-var escrow-nonce uint u0)
 
-;; ---------------------------------------------------------
 ;; Data Maps
-;; ---------------------------------------------------------
-
-;; Store full status of each escrow agreement
 (define-map escrows
     { escrow-id: uint }
     {
@@ -38,6 +23,7 @@
         stx-deposited: bool,
         completed: bool
     }
+)
 )
 
 ;; ---------------------------------------------------------
