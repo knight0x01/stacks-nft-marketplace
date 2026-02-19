@@ -1,23 +1,15 @@
-;; ---------------------------------------------------------
 ;; NFT Marketplace Contract
-;; ---------------------------------------------------------
-;; A decentralized marketplace for SIP-009 NFTs on the Stacks blockchain.
-;; This contract allows users to list NFTs for sale, purchase listed NFTs,
-;; and manage platform-wide settings like fees and pausing.
-;; ---------------------------------------------------------
+;; Decentralized marketplace for SIP-009 NFTs on Stacks blockchain
 
-;; ---------------------------------------------------------
-;; Constants & Error Codes
-;; ---------------------------------------------------------
+;; Constants
 (define-constant contract-owner tx-sender)
-
-;; Error Codes
 (define-constant err-owner-only (err u100))
 (define-constant err-not-found (err u101))
 (define-constant err-listing-exists (err u102))
 (define-constant err-unauthorized (err u103))
 (define-constant err-invalid-price (err u104))
 (define-constant err-paused (err u105))
+(define-constant err-invalid-fee (err u106))
 
 ;; ---------------------------------------------------------
 ;; Data Variables
