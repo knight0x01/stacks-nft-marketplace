@@ -8,14 +8,23 @@ A decentralized NFT marketplace built on the Stacks blockchain with support for 
 - **Auction System**: English auction mechanism for competitive bidding
 - **Secure Escrow**: Safe peer-to-peer NFT trades
 - **Royalty Management**: Automatic royalty payments to creators
+- **Offer System**: Make and accept offers on NFTs
+- **Collection Verification**: Verify authentic NFT collections
 - **SIP-009 Compliant**: Standard NFT trait implementation
 
 ## Smart Contracts
 
+### Core Contracts
 - `nft-marketplace.clar` - Core marketplace for buying/selling NFTs
 - `nft-auction.clar` - English auction system
 - `nft-escrow.clar` - Secure escrow for trades
 - `nft-royalty.clar` - Creator royalty management
+- `nft-offers.clar` - Offer system for NFTs
+- `collection-verification.clar` - Collection verification
+- `nft-bundle.clar` - Bundle multiple NFTs
+- `nft-whitelist.clar` - Whitelist management
+
+### Example Contracts
 - `example-nft.clar` - Sample NFT collection
 - `sip-009-nft-trait.clar` - Standard NFT trait
 
@@ -25,6 +34,21 @@ A decentralized NFT marketplace built on the Stacks blockchain with support for 
 npm install
 ```
 
+## Configuration
+
+1. Copy the environment template:
+```bash
+cp .env.template .env
+```
+
+2. Update `.env` with your configuration:
+```env
+NETWORK=mainnet
+CONTRACT_ADDRESS=your_contract_deployer_address
+```
+
+**Note**: Add your private key to `.env` file (see `.env.template` for format)
+
 ## Testing
 
 ```bash
@@ -33,12 +57,7 @@ npm test
 
 ## Deployment
 
-1. Create a `.env` file with your private key:
-```
-PRIVATE_KEY=your_private_key_here
-```
-
-2. Deploy contracts:
+Deploy contracts to mainnet:
 ```bash
 npm run deploy
 ```
@@ -59,6 +78,44 @@ node scripts/list-nft.js <nft-contract> <token-id> <price>
 ```bash
 node scripts/buy-nft.js <listing-id>
 ```
+
+### Batch Operations
+```bash
+node scripts/bulk-list.js
+node scripts/batch-mint.js
+```
+
+### Analytics
+```bash
+node scripts/marketplace-stats.js
+node scripts/collection-stats.js
+```
+
+## Security
+
+- Private keys are stored in `.env` (never committed to git)
+- All scripts validate inputs before transactions
+- Contracts include pause mechanisms for emergencies
+- Comprehensive error handling throughout
+
+## Project Structure
+
+```
+├── contracts/          # Clarity smart contracts
+├── scripts/           # Deployment and interaction scripts
+├── tests/             # Contract tests
+├── utils/             # Utility functions
+├── config/            # Configuration files
+└── deployments/       # Deployment artifacts
+```
+
+## Contributing
+
+1. Fork the repository
+2. Create a feature branch
+3. Make your changes
+4. Run tests
+5. Submit a pull request
 
 ## License
 
