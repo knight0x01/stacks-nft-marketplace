@@ -1,33 +1,16 @@
-;; ---------------------------------------------------------
 ;; NFT Royalty Contract
-;; ---------------------------------------------------------
-;; This contract manages the distribution of secondary sale
-;; royalties to NFT creators. It supports setting royalty
-;; percentages and processing payments.
-;; ---------------------------------------------------------
+;; Manages secondary sale royalties for NFT creators
 
-;; ---------------------------------------------------------
-;; Constants & Error Codes
-;; ---------------------------------------------------------
-;; Error Codes
-(define-constant ERR_UNAUTHORIZED (err u400))
-(define-constant ERR_INVALID_PERCENTAGE (err u401))
-(define-constant ERR_NOT_FOUND (err u402))
+;; Constants
+(define-constant err-unauthorized (err u400))
+(define-constant err-invalid-percentage (err u401))
+(define-constant err-not-found (err u402))
 
-;; ---------------------------------------------------------
 ;; Data Maps
-;; ---------------------------------------------------------
-
-;; Store creator address and royalty percentage (basis points) for each NFT
 (define-map royalties
     { nft-contract: principal, token-id: uint }
-    {
-        creator: principal,
-        percentage: uint
-    }
+    { creator: principal, percentage: uint }
 )
-
-;; ---------------------------------------------------------
 ;; Read-Only Functions
 ;; ---------------------------------------------------------
 
