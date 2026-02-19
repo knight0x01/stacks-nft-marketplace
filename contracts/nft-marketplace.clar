@@ -67,68 +67,28 @@
     (ok (var-get featured-fee))
 )
 
-;; ---------------------------------------------------------
 ;; Public Functions
-;; ---------------------------------------------------------
-
-;; @desc Create a new listing for an NFT
-;; @param nft-contract: The principal of the SIP-009 NFT contract
-;; @param token-id: The ID of the token being listed
-;; @param price: The sale price in micro-STX
 (define-public (create-listing (nft-contract principal) (token-id uint) (price uint))
-    (let
-        (
-            (new-id (+ (var-get listing-nonce) u1))
-        )
-        ;; Assertions
+    (let ((new-id (+ (var-get listing-nonce) u1)))
         (asserts! (not (var-get is-paused)) err-paused)
         (asserts! (> price u0) err-invalid-price)
         
-        ;; Record the new listing
-        (map-set listings
-            { listing-id: new-id }
-            {
-                nft-contract: nft-contract,
-                token-id: token-id,
-                seller: tx-sender,
-                price: price,
-                active: true,
-                featured: false
-            }
-        )
+        (map-set listings { listing-id: new-id }
+            { nft-contract: nft-contract, token-id: token-id, seller: tx-sender,
+              price: price, active: true, featured: false })
         
-        ;; Add to user's listing tracking
-        (map-set user-listings
-            { user: tx-sender, listing-id: new-id }
-            true
-        )
+        (map-set user-listings { user: tx-sender, listing-id: new-id } true)
         
-        ;; Update price history for market analytics
-        (let
-            (
-                (history-count (get-price-history-count nft-contract token-id))
-                (new-index (+ history-count u1))
-            )
+        (let ((history-count (get-price-history-count nft-contract token-id))
+              (new-index (+ history-count u1)))
             (map-set price-history
                 { nft-contract: nft-contract, token-id: token-id, index: new-index }
-                {
-                    price: price,
-                    timestamp: block-height,
-                    listing-id: new-id
-                }
-            )
+                { price: price, timestamp: block-height, listing-id: new-id })
             (map-set price-history-count
-                { nft-contract: nft-contract, token-id: token-id }
-                new-index
-            )
-        )
+                { nft-contract: nft-contract, token-id: token-id } new-index))
         
-        ;; Finalize listing creation
         (var-set listing-nonce new-id)
-        
-        ;; Event emission
         (print { event: "create-listing", listing-id: new-id, seller: tx-sender, price: price })
-        
         (ok new-id)
     )
 )
