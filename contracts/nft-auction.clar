@@ -1,39 +1,20 @@
-;; ---------------------------------------------------------
 ;; NFT Auction Contract
-;; ---------------------------------------------------------
-;; This contract implements an English Auction mechanism for SIP-009 NFTs.
-;; Sellers can create auctions with a starting price and duration.
-;; Bidders can place increasing bids, with STX being locked in the contract.
-;; ---------------------------------------------------------
+;; English auction mechanism for SIP-009 NFTs
 
-;; ---------------------------------------------------------
-;; Constants & Error Codes
-;; ---------------------------------------------------------
-(define-constant CONTRACT_OWNER tx-sender)
+;; Constants
+(define-constant contract-owner tx-sender)
+(define-constant err-owner-only (err u200))
+(define-constant err-not-found (err u201))
+(define-constant err-auction-active (err u202))
+(define-constant err-auction-ended (err u203))
+(define-constant err-bid-too-low (err u204))
+(define-constant err-unauthorized (err u205))
 
-;; Error Codes
-(define-constant ERR_OWNER_ONLY (err u200))
-(define-constant ERR_NOT_FOUND (err u201))
-(define-constant ERR_AUCTION_ACTIVE (err u202))
-(define-constant ERR_AUCTION_ENDED (err u203))
-(define-constant ERR_BID_TOO_LOW (err u204))
-(define-constant ERR_UNAUTHORIZED (err u205))
-
-;; ---------------------------------------------------------
 ;; Data Variables
-;; ---------------------------------------------------------
-
-;; Counter for generating unique auction IDs
 (define-data-var auction-nonce uint u0)
+(define-data-var extension-duration uint u10)
 
-;; Auction extension period when a bid is placed near the end
-(define-data-var extension-duration uint u10) ;; Default 10 blocks extension
-
-;; ---------------------------------------------------------
 ;; Data Maps
-;; ---------------------------------------------------------
-
-;; Store all details for each auction
 (define-map auctions
     { auction-id: uint }
     {
