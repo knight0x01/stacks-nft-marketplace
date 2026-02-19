@@ -1,8 +1,9 @@
 {
   "name": "stacks-nft-marketplace",
-  "version": "1.0.0",
-  "description": "Decentralized NFT marketplace on Stacks blockchain",
+  "version": "2.0.0",
+  "description": "Decentralized NFT marketplace on Stacks blockchain with auctions, escrow, and royalties",
   "main": "index.js",
+  "type": "module",
   "scripts": {
     "test": "vitest run",
     "test:watch": "vitest",
@@ -12,11 +13,17 @@
     "check:deployed": "node scripts/check-deployed.js",
     "interact:65tx": "node scripts/interact-65tx.js",
     "mint": "node scripts/mint-nft.js",
-    "list": "node scripts/list-nft.js"
+    "list": "node scripts/list-nft.js",
+    "stats": "node scripts/marketplace-stats.js",
+    "analytics": "node scripts/analytics.js"
   },
-  "keywords": ["stacks", "nft", "marketplace", "blockchain", "clarity"],
+  "keywords": ["stacks", "nft", "marketplace", "blockchain", "clarity", "auction", "escrow", "royalties"],
   "author": "knight0x01",
   "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/knight0x01/stacks-nft-marketplace"
+  },
   "dependencies": {
     "@stacks/transactions": "^6.13.0",
     "@stacks/network": "^6.13.0",
@@ -26,5 +33,8 @@
     "@hirosystems/clarinet-sdk": "^2.3.2",
     "vitest": "^1.0.4",
     "typescript": "^5.3.3"
+  },
+  "engines": {
+    "node": ">=18.0.0"
   }
 }
