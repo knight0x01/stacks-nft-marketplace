@@ -35,11 +35,452 @@ path = "contracts/nft-royalty.clar"
 clarity_version = 2
 epoch = 2.4
 
-[repl.analysis]
-passes = ["check_checker"]
+[contracts.cryptopunks]
+path = "contracts/cryptopunks.clar"
+clarity_version = 2
+epoch = 2.4
 
-[repl.analysis.check_checker]
-strict = false
-trusted_sender = false
-trusted_caller = false
-callee_filter = false
+[contracts.bayc]
+path = "contracts/bayc.clar"
+clarity_version = 2
+epoch = 2.4
+
+[contracts.mayc]
+path = "contracts/mayc.clar"
+clarity_version = 2
+epoch = 2.4
+
+[contracts.azuki]
+path = "contracts/azuki.clar"
+clarity_version = 2
+epoch = 2.4
+
+[contracts.clonex]
+path = "contracts/clonex.clar"
+clarity_version = 2
+epoch = 2.4
+
+[contracts.moonbirds]
+path = "contracts/moonbirds.clar"
+clarity_version = 2
+epoch = 2.4
+
+[contracts.doodles]
+path = "contracts/doodles.clar"
+clarity_version = 2
+epoch = 2.4
+
+[contracts.pudgy-penguins]
+path = "contracts/pudgy-penguins.clar"
+clarity_version = 2
+epoch = 2.4
+
+[contracts.cool-cats]
+path = "contracts/cool-cats.clar"
+clarity_version = 2
+epoch = 2.4
+
+[contracts.wow]
+path = "contracts/wow.clar"
+clarity_version = 2
+epoch = 2.4
+
+[contracts.meebits]
+path = "contracts/meebits.clar"
+clarity_version = 2
+epoch = 2.4
+
+[contracts.milady]
+path = "contracts/milady.clar"
+clarity_version = 2
+epoch = 2.4
+
+[contracts.invisible-friends]
+path = "contracts/invisible-friends.clar"
+clarity_version = 2
+epoch = 2.4
+
+[contracts.cyberkongz]
+path = "contracts/cyberkongz.clar"
+clarity_version = 2
+epoch = 2.4
+
+[contracts.art-blocks]
+path = "contracts/art-blocks.clar"
+clarity_version = 2
+epoch = 2.4
+
+[contracts.degods]
+path = "contracts/degods.clar"
+clarity_version = 2
+epoch = 2.4
+
+[contracts.y00ts]
+path = "contracts/y00ts.clar"
+clarity_version = 2
+epoch = 2.4
+
+[contracts.otherdeed]
+path = "contracts/otherdeed.clar"
+clarity_version = 2
+epoch = 2.4
+
+[contracts.sewer-pass]
+path = "contracts/sewer-pass.clar"
+clarity_version = 2
+epoch = 2.4
+
+[contracts.checks]
+path = "contracts/checks.clar"
+clarity_version = 2
+epoch = 2.4
+
+[contracts.opepen]
+path = "contracts/opepen.clar"
+clarity_version = 2
+epoch = 2.4
+
+[contracts.nakamigos]
+path = "contracts/nakamigos.clar"
+clarity_version = 2
+epoch = 2.4
+
+[contracts.captainz]
+path = "contracts/captainz.clar"
+clarity_version = 2
+epoch = 2.4
+
+[contracts.potatoz]
+path = "contracts/potatoz.clar"
+clarity_version = 2
+epoch = 2.4
+
+[contracts.beanz]
+path = "contracts/beanz.clar"
+clarity_version = 2
+epoch = 2.4
+
+[contracts.renga]
+path = "contracts/renga.clar"
+clarity_version = 2
+epoch = 2.4
+
+[contracts.sappy-seals]
+path = "contracts/sappy-seals.clar"
+clarity_version = 2
+epoch = 2.4
+
+[contracts.deadfellaz]
+path = "contracts/deadfellaz.clar"
+clarity_version = 2
+epoch = 2.4
+
+[contracts.creature-world]
+path = "contracts/creature-world.clar"
+clarity_version = 2
+epoch = 2.4
+
+[contracts.mekaverse]
+path = "contracts/mekaverse.clar"
+clarity_version = 2
+epoch = 2.4
+
+[contracts.hape-prime]
+path = "contracts/hape-prime.clar"
+clarity_version = 2
+epoch = 2.4
+
+[contracts.prime-ape-planet]
+path = "contracts/prime-ape-planet.clar"
+clarity_version = 2
+epoch = 2.4
+
+[contracts.gutter-cat-gang]
+path = "contracts/gutter-cat-gang.clar"
+clarity_version = 2
+epoch = 2.4
+
+[contracts.phantabear]
+path = "contracts/phantabear.clar"
+clarity_version = 2
+epoch = 2.4
+
+[contracts.karafuru]
+path = "contracts/karafuru.clar"
+clarity_version = 2
+epoch = 2.4
+
+[contracts.murakami-flowers]
+path = "contracts/murakami-flowers.clar"
+clarity_version = 2
+epoch = 2.4
+
+[contracts.valhalla]
+path = "contracts/valhalla.clar"
+clarity_version = 2
+epoch = 2.4
+
+[contracts.digidaigaku]
+path = "contracts/digidaigaku.clar"
+clarity_version = 2
+epoch = 2.4
+
+[contracts.moonrunners]
+path = "contracts/moonrunners.clar"
+clarity_version = 2
+epoch = 2.4
+
+[contracts.goblintown]
+path = "contracts/goblintown.clar"
+clarity_version = 2
+epoch = 2.4
+
+[contracts.nouns]
+path = "contracts/nouns.clar"
+clarity_version = 2
+epoch = 2.4
+
+[contracts.cryptokitties]
+path = "contracts/cryptokitties.clar"
+clarity_version = 2
+epoch = 2.4
+
+[contracts.bakc]
+path = "contracts/bakc.clar"
+clarity_version = 2
+epoch = 2.4
+
+[contracts.veefriends]
+path = "contracts/veefriends.clar"
+clarity_version = 2
+epoch = 2.4
+
+[contracts.nft-worlds]
+path = "contracts/nft-worlds.clar"
+clarity_version = 2
+epoch = 2.4
+
+[contracts.fluf-world]
+path = "contracts/fluf-world.clar"
+clarity_version = 2
+epoch = 2.4
+
+[contracts.rumble-kong-league]
+path = "contracts/rumble-kong-league.clar"
+clarity_version = 2
+epoch = 2.4
+
+[contracts.cryptoadz]
+path = "contracts/cryptoadz.clar"
+clarity_version = 2
+epoch = 2.4
+
+[contracts.on1-force]
+path = "contracts/on1-force.clar"
+clarity_version = 2
+epoch = 2.4
+
+[contracts.parallel-alpha]
+path = "contracts/parallel-alpha.clar"
+clarity_version = 2
+epoch = 2.4
+
+[contracts.tenktf]
+path = "contracts/tenktf.clar"
+clarity_version = 2
+epoch = 2.4
+
+[contracts.adidas]
+path = "contracts/adidas.clar"
+clarity_version = 2
+epoch = 2.4
+
+[contracts.mnlth]
+path = "contracts/mnlth.clar"
+clarity_version = 2
+epoch = 2.4
+
+[contracts.rare-apepe]
+path = "contracts/rare-apepe.clar"
+clarity_version = 2
+epoch = 2.4
+
+[contracts.gucci-grail]
+path = "contracts/gucci-grail.clar"
+clarity_version = 2
+epoch = 2.4
+
+[contracts.koda]
+path = "contracts/koda.clar"
+clarity_version = 2
+epoch = 2.4
+
+[contracts.chemistry-club]
+path = "contracts/chemistry-club.clar"
+clarity_version = 2
+epoch = 2.4
+
+[contracts.hv-mtl]
+path = "contracts/hv-mtl.clar"
+clarity_version = 2
+epoch = 2.4
+
+[contracts.lotm]
+path = "contracts/lotm.clar"
+clarity_version = 2
+epoch = 2.4
+
+[contracts.pudgy-rods]
+path = "contracts/pudgy-rods.clar"
+clarity_version = 2
+epoch = 2.4
+
+[contracts.lil-pudgys]
+path = "contracts/lil-pudgys.clar"
+clarity_version = 2
+epoch = 2.4
+
+[contracts.my-pet-hooligan]
+path = "contracts/my-pet-hooligan.clar"
+clarity_version = 2
+epoch = 2.4
+
+[contracts.pixelmon]
+path = "contracts/pixelmon.clar"
+clarity_version = 2
+epoch = 2.4
+
+[contracts.kaijukingz]
+path = "contracts/kaijukingz.clar"
+clarity_version = 2
+epoch = 2.4
+
+[contracts.boss-beauties]
+path = "contracts/boss-beauties.clar"
+clarity_version = 2
+epoch = 2.4
+
+[contracts.supducks]
+path = "contracts/supducks.clar"
+clarity_version = 2
+epoch = 2.4
+
+[contracts.toon-squad]
+path = "contracts/toon-squad.clar"
+clarity_version = 2
+epoch = 2.4
+
+[contracts.lazy-lions]
+path = "contracts/lazy-lions.clar"
+clarity_version = 2
+epoch = 2.4
+
+[contracts.cyberbrokers]
+path = "contracts/cyberbrokers.clar"
+clarity_version = 2
+epoch = 2.4
+
+[contracts.wonderpals]
+path = "contracts/wonderpals.clar"
+clarity_version = 2
+epoch = 2.4
+
+[contracts.autoglyphs]
+path = "contracts/autoglyphs.clar"
+clarity_version = 2
+epoch = 2.4
+
+[contracts.loot]
+path = "contracts/loot.clar"
+clarity_version = 2
+epoch = 2.4
+
+[contracts.mfers]
+path = "contracts/mfers.clar"
+clarity_version = 2
+epoch = 2.4
+
+[contracts.forgotten-runes]
+path = "contracts/forgotten-runes.clar"
+clarity_version = 2
+epoch = 2.4
+
+[contracts.chimpers]
+path = "contracts/chimpers.clar"
+clarity_version = 2
+epoch = 2.4
+
+[contracts.tubby-cats]
+path = "contracts/tubby-cats.clar"
+clarity_version = 2
+epoch = 2.4
+
+[contracts.terraforms]
+path = "contracts/terraforms.clar"
+clarity_version = 2
+epoch = 2.4
+
+[contracts.sandbox-land]
+path = "contracts/sandbox-land.clar"
+clarity_version = 2
+epoch = 2.4
+
+[contracts.decentraland]
+path = "contracts/decentraland.clar"
+clarity_version = 2
+epoch = 2.4
+
+[contracts.blitmap]
+path = "contracts/blitmap.clar"
+clarity_version = 2
+epoch = 2.4
+
+[contracts.hashmasks]
+path = "contracts/hashmasks.clar"
+clarity_version = 2
+epoch = 2.4
+
+[contracts.wolf-game]
+path = "contracts/wolf-game.clar"
+clarity_version = 2
+epoch = 2.4
+
+[contracts.chain-runners]
+path = "contracts/chain-runners.clar"
+clarity_version = 2
+epoch = 2.4
+
+[contracts.animetas]
+path = "contracts/animetas.clar"
+clarity_version = 2
+epoch = 2.4
+
+[contracts.tiny-dinos]
+path = "contracts/tiny-dinos.clar"
+clarity_version = 2
+epoch = 2.4
+
+[contracts.eightliens]
+path = "contracts/eightliens.clar"
+clarity_version = 2
+epoch = 2.4
+
+[contracts.jenkins-valet]
+path = "contracts/jenkins-valet.clar"
+clarity_version = 2
+epoch = 2.4
+
+[contracts.dreadfulz]
+path = "contracts/dreadfulz.clar"
+clarity_version = 2
+epoch = 2.4
+
+[contracts.quirkies]
+path = "contracts/quirkies.clar"
+clarity_version = 2
+epoch = 2.4
+
+[contracts.illuminati]
+path = "contracts/illuminati.clar"
+clarity_version = 2
+epoch = 2.4
