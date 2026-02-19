@@ -11,27 +11,13 @@
 (define-constant err-paused (err u105))
 (define-constant err-invalid-fee (err u106))
 
-;; ---------------------------------------------------------
 ;; Data Variables
-;; ---------------------------------------------------------
-
-;; Platform fee in basis points (e.g., 250 = 2.5%)
 (define-data-var platform-fee-percent uint u250)
-
-;; Circuit breaker status
 (define-data-var is-paused bool false)
-
-;; Continuous counter for unique listing IDs
 (define-data-var listing-nonce uint u0)
+(define-data-var featured-fee uint u5000000)
 
-;; Charge for featuring a listing on the homepage (in micro-STX)
-(define-data-var featured-fee uint u5000000) ;; 5 STX
-
-;; ---------------------------------------------------------
 ;; Data Maps
-;; ---------------------------------------------------------
-
-;; Store all details for each NFT listing
 (define-map listings
     { listing-id: uint }
     {
@@ -44,33 +30,13 @@
     }
 )
 
-;; Map to track listings created by a specific user
-(define-map user-listings
-    { user: principal, listing-id: uint }
-    bool
-)
-
-;; Store historical sale prices for analytics and floor price calculation
+(define-map user-listings { user: principal, listing-id: uint } bool)
+(define-map featured-listings { listing-id: uint } bool)
 (define-map price-history
     { nft-contract: principal, token-id: uint, index: uint }
-    {
-        price: uint,
-        timestamp: uint,
-        listing-id: uint
-    }
+    { price: uint, timestamp: uint, listing-id: uint }
 )
-
-;; Counter for price records per specific NFT
-(define-map price-history-count
-    { nft-contract: principal, token-id: uint }
-    uint
-)
-
-;; Track listings that have been promoted via the featured fee
-(define-map featured-listings
-    { listing-id: uint }
-    bool
-)
+(define-map price-history-count { nft-contract: principal, token-id: uint } uint)
 
 ;; ---------------------------------------------------------
 ;; Read-Only Functions
