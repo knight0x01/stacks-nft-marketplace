@@ -93,57 +93,29 @@
     )
 )
 
-;; @desc Cancel an active listing
-;; @param listing-id: The unique ID of the listing to cancel
 (define-public (cancel-listing (listing-id uint))
-    (let
-        (
-            (listing (unwrap! (map-get? listings { listing-id: listing-id }) err-not-found))
-        )
-        ;; Authorization check
+    (let ((listing (unwrap! (map-get? listings { listing-id: listing-id }) err-not-found)))
         (asserts! (is-eq tx-sender (get seller listing)) err-unauthorized)
-        ;; Status check
         (asserts! (get active listing) err-not-found)
         
-        ;; Deactivate listing
-        (map-set listings
-            { listing-id: listing-id }
-            (merge listing { active: false })
-        )
-        
-        ;; Event emission
+        (map-set listings { listing-id: listing-id } (merge listing { active: false }))
         (print { event: "cancel-listing", listing-id: listing-id })
         (ok true)
     )
 )
 
-;; @desc Purchase an active listing
-;; @param listing-id: The unique ID of the listing to purchase
 (define-public (purchase-listing (listing-id uint))
-    (let
-        (
-            (listing (unwrap! (map-get? listings { listing-id: listing-id }) err-not-found))
-            (price (get price listing))
-            (fee (/ (* price (var-get platform-fee-percent)) u10000))
-            (seller-amount (- price fee))
-        )
-        ;; Checks
+    (let ((listing (unwrap! (map-get? listings { listing-id: listing-id }) err-not-found))
+          (price (get price listing))
+          (fee (/ (* price (var-get platform-fee-percent)) u10000))
+          (seller-amount (- price fee)))
         (asserts! (not (var-get is-paused)) err-paused)
         (asserts! (get active listing) err-not-found)
         
-        ;; Payout to seller
         (try! (stx-transfer? seller-amount tx-sender (get seller listing)))
-        
-        ;; Payout platform fee
         (try! (stx-transfer? fee tx-sender contract-owner))
         
-        ;; Mark as sold/inactive
-        (map-set listings
-            { listing-id: listing-id }
-            (merge listing { active: false })
-        )
-        
-        ;; Event emission
+        (map-set listings { listing-id: listing-id } (merge listing { active: false }))
         (print { event: "purchase-listing", listing-id: listing-id, buyer: tx-sender, price: price })
         (ok true)
     )
