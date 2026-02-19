@@ -1,10 +1,42 @@
+# Dependencies
 node_modules/
+package-lock.json
+
+# Environment & Secrets
 .env
+.env.local
+.env.*.local
+*.pem
+*.key
+*.secret
+
+# Build outputs
 .cache/
 dist/
 build/
+out/
+
+# Logs
 *.log
-.DS_Store
-coverage/
+logs/
+activity.log
+
+# IDE
 .vscode/
 .idea/
+*.swp
+*.swo
+.DS_Store
+
+# Testing
+coverage/
+.nyc_output/
+
+# Clarinet
+settings/Devnet.toml
+settings/Simnet.toml
+.clarinet/
+
+# Deployment artifacts
+deployments/*.json
+!deployments/.gitkeep
