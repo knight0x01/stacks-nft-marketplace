@@ -122,34 +122,22 @@
 )
 
 (define-public (feature-listing (listing-id uint))
-    (let
-        (
-            (listing (unwrap! (map-get? listings { listing-id: listing-id }) err-not-found))
-        )
+    (let ((listing (unwrap! (map-get? listings { listing-id: listing-id }) err-not-found)))
         (asserts! (is-eq tx-sender (get seller listing)) err-unauthorized)
         (asserts! (get active listing) err-not-found)
         
-        ;; Pay featured fee
         (try! (stx-transfer? (var-get featured-fee) tx-sender contract-owner))
         
-        ;; Mark as featured
-        (map-set listings
-            { listing-id: listing-id }
-            (merge listing { featured: true })
-        )
-        (map-set featured-listings
-            { listing-id: listing-id }
-            true
-        )
+        (map-set listings { listing-id: listing-id } (merge listing { featured: true }))
+        (map-set featured-listings { listing-id: listing-id } true)
         (ok true)
     )
 )
 
-;; Admin functions
 (define-public (set-platform-fee (new-fee uint))
     (begin
         (asserts! (is-eq tx-sender contract-owner) err-owner-only)
-        (asserts! (<= new-fee u1000) err-invalid-price) ;; Max 10%
+        (asserts! (<= new-fee u1000) err-invalid-fee)
         (var-set platform-fee-percent new-fee)
         (ok true)
     )
