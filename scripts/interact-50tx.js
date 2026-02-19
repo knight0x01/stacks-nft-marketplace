@@ -39,7 +39,7 @@ async function executeTransaction(contractName, functionName, functionArgs, nonc
             contractName,
             functionName,
             functionArgs,
-            senderKey: PRIVATE_KEY,
+            senderKey: process.env.PRIVATE_KEY,
             network: NETWORK,
             anchorMode: AnchorMode.Any,
             fee: 50000n,
