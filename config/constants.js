@@ -1,9 +1,11 @@
+import 'dotenv/config';
+
 export const CONSTANTS = {
-  PLATFORM_FEE_PERCENT: 250, // 2.5%
-  MAX_FEE_PERCENT: 1000, // 10%
-  MIN_PRICE: 1000000, // 1 STX
-  AUCTION_MIN_DURATION: 144, // ~24 hours in blocks
-  ROYALTY_MAX_PERCENT: 1000, // 10%
+  PLATFORM_FEE_PERCENT: 250,
+  MAX_FEE_PERCENT: 1000,
+  MIN_PRICE: 1000000,
+  AUCTION_MIN_DURATION: 144,
+  ROYALTY_MAX_PERCENT: 1000,
 };
 
 export const NETWORKS = {
@@ -19,3 +21,10 @@ export const CONTRACT_NAMES = {
   EXAMPLE_NFT: 'example-nft',
   TRAIT: 'sip-009-nft-trait',
 };
+
+export const getConfig = () => ({
+  network: process.env.NETWORK || 'mainnet',
+  apiUrl: NETWORKS[process.env.NETWORK] || NETWORKS.mainnet,
+  contractAddress: process.env.CONTRACT_ADDRESS,
+  privateKey: process.env.PRIVATE_KEY,
+});
