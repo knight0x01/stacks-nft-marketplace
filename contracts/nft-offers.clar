@@ -1,36 +1,19 @@
-;; ---------------------------------------------------------
 ;; NFT Offer System
-;; ---------------------------------------------------------
-;; This contract allows users to place custom STX offers on any SIP-009 NFT.
-;; Offers lock STX in the contract and specify an expiration block.
-;; Owners can accept, reject or ignore offers. Offerers can cancel.
-;; ---------------------------------------------------------
+;; Allows users to place custom STX offers on SIP-009 NFTs
 
-;; ---------------------------------------------------------
-;; Constants & Error Codes
-;; ---------------------------------------------------------
-(define-constant CONTRACT_OWNER tx-sender)
+;; Constants
+(define-constant contract-owner tx-sender)
+(define-constant err-owner-only (err u400))
+(define-constant err-not-found (err u401))
+(define-constant err-unauthorized (err u402))
+(define-constant err-expired (err u403))
+(define-constant err-invalid-amount (err u404))
+(define-constant err-offer-exists (err u405))
 
-;; Error Codes
-(define-constant ERR_OWNER_ONLY (err u400))
-(define-constant ERR_NOT_FOUND (err u401))
-(define-constant ERR_UNAUTHORIZED (err u402))
-(define-constant ERR_EXPIRED (err u403))
-(define-constant ERR_INVALID_AMOUNT (err u404))
-(define-constant ERR_OFFER_EXISTS (err u405))
-
-;; ---------------------------------------------------------
 ;; Data Variables
-;; ---------------------------------------------------------
-
-;; Counter for generating unique offer IDs
 (define-data-var offer-nonce uint u0)
 
-;; ---------------------------------------------------------
 ;; Data Maps
-;; ---------------------------------------------------------
-
-;; Store all details for each specific offer
 (define-map offers
     { offer-id: uint }
     {
