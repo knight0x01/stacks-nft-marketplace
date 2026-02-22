@@ -1,0 +1,19 @@
+.actions {
+  display: flex;
+  gap: 1rem;
+  margin: 1.5rem 0;
+}
+
+.actions button {
+  flex: 1;
+  max-width: 200px;
+}
+
+section {
+  margin-bottom: 3rem;
+}
+
+section h2 {
+  font-size: 2rem;
+  margin-bottom: 1rem;
+}
