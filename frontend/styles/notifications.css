@@ -1,0 +1,31 @@
+.notification {
+  position: fixed;
+  top: 2rem;
+  right: 2rem;
+  background: #1a1a1a;
+  color: #fff;
+  padding: 1rem 1.5rem;
+  border-radius: 8px;
+  border: 1px solid #333;
+  opacity: 0;
+  transform: translateX(100%);
+  transition: all 0.3s;
+  z-index: 2000;
+}
+
+.notification.show {
+  opacity: 1;
+  transform: translateX(0);
+}
+
+.notification.success {
+  border-color: #10b981;
+}
+
+.notification.error {
+  border-color: #ef4444;
+}
+
+.notification.info {
+  border-color: #667eea;
+}
