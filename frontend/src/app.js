@@ -38,12 +38,18 @@ class MarketplaceApp {
 
   attachEventListeners() {
     document.getElementById('connect-wallet')?.addEventListener('click', async () => {
+      const btn = document.getElementById('connect-wallet');
+      btn.disabled = true;
+      btn.textContent = 'Connecting...';
+      
       try {
         await connectWallet();
         this.updateUI();
         this.showNotification('Wallet connected successfully!', 'success');
       } catch (error) {
         this.showNotification('Failed to connect wallet', 'error');
+        btn.disabled = false;
+        btn.textContent = 'Connect Wallet';
       }
     });
 
@@ -55,6 +61,9 @@ class MarketplaceApp {
     document.getElementById('list-nft-form')?.addEventListener('submit', async (e) => {
       e.preventDefault();
       const formData = new FormData(e.target);
+      const btn = e.target.querySelector('button[type="submit"]');
+      btn.disabled = true;
+      btn.textContent = 'Listing...';
       
       try {
         const result = await listNFT(
@@ -67,6 +76,9 @@ class MarketplaceApp {
         e.target.reset();
       } catch (error) {
         this.showNotification(error.message, 'error');
+      } finally {
+        btn.disabled = false;
+        btn.textContent = 'List NFT';
       }
     });
 
