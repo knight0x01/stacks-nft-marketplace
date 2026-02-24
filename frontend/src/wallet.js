@@ -33,6 +33,21 @@ export function getAddress() {
   return userData.addresses.stx[0].address;
 }
 
+export function getBTCAddress() {
+  const userData = getUserData();
+  if (!userData?.addresses) return null;
+  return userData.addresses.btc[0].address;
+}
+
+export function getAllAddresses() {
+  const userData = getUserData();
+  if (!userData?.addresses) return null;
+  return {
+    stx: userData.addresses.stx[0].address,
+    btc: userData.addresses.btc[0].address,
+  };
+}
+
 export async function getAccountDetails() {
   const accounts = await request('stx_getAccounts');
   const account = accounts.addresses[0];
