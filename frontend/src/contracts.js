@@ -1,12 +1,21 @@
 import { request } from '@stacks/connect';
 import { Cl } from '@stacks/transactions';
-import { getAddress } from './wallet.js';
+import { getAddress, isSignedIn } from './wallet.js';
 import { CONFIG, getNetwork } from './config.js';
 
 const { CONTRACT_ADDRESS, CONTRACTS } = CONFIG;
 
+function ensureConnected() {
+  if (!isSignedIn()) {
+    throw new Error('Please connect your wallet first');
+  }
+}
+
 // STX Transfer
 export async function transferSTX(recipient, amount, memo = '') {
+  ensureConnected();
+  ensureConnected();
+  
   const response = await request('stx_transferStx', {
     recipient,
     amount: amount.toString(),
@@ -19,6 +28,8 @@ export async function transferSTX(recipient, amount, memo = '') {
 
 // Marketplace Functions
 export async function listNFT(nftContract, tokenId, price, expiry) {
+  ensureConnected();
+  ensureConnected();
   const response = await request('stx_callContract', {
     contractAddress: CONTRACT_ADDRESS,
     contractName: CONTRACTS.MARKETPLACE,
@@ -36,6 +47,7 @@ export async function listNFT(nftContract, tokenId, price, expiry) {
 }
 
 export async function buyNFT(nftContract, listingId, price) {
+  ensureConnected();
   const response = await request('stx_callContract', {
     contractAddress: CONTRACT_ADDRESS,
     contractName: CONTRACTS.MARKETPLACE,
@@ -51,6 +63,7 @@ export async function buyNFT(nftContract, listingId, price) {
 }
 
 export async function unlistNFT(nftContract, listingId) {
+  ensureConnected();
   const response = await request('stx_callContract', {
     contractAddress: CONTRACT_ADDRESS,
     contractName: CONTRACTS.MARKETPLACE,
@@ -66,6 +79,7 @@ export async function unlistNFT(nftContract, listingId) {
 }
 
 export async function updatePrice(listingId, newPrice) {
+  ensureConnected();
   const response = await request('stx_callContract', {
     contractAddress: CONTRACT_ADDRESS,
     contractName: CONTRACTS.MARKETPLACE,
@@ -82,6 +96,7 @@ export async function updatePrice(listingId, newPrice) {
 
 // Auction Functions
 export async function createAuction(nftContract, tokenId, reservePrice, duration) {
+  ensureConnected();
   const response = await request('stx_callContract', {
     contractAddress: CONTRACT_ADDRESS,
     contractName: CONTRACTS.AUCTION,
@@ -99,6 +114,7 @@ export async function createAuction(nftContract, tokenId, reservePrice, duration
 }
 
 export async function placeBid(auctionId, bidAmount) {
+  ensureConnected();
   const response = await request('stx_callContract', {
     contractAddress: CONTRACT_ADDRESS,
     contractName: CONTRACTS.AUCTION,
@@ -115,6 +131,7 @@ export async function placeBid(auctionId, bidAmount) {
 
 // Offers Functions
 export async function makeOffer(nftContract, tokenId, amount, expiry) {
+  ensureConnected();
   const response = await request('stx_callContract', {
     contractAddress: CONTRACT_ADDRESS,
     contractName: CONTRACTS.OFFERS,
@@ -132,6 +149,7 @@ export async function makeOffer(nftContract, tokenId, amount, expiry) {
 }
 
 export async function acceptOffer(nftContract, offerId) {
+  ensureConnected();
   const response = await request('stx_callContract', {
     contractAddress: CONTRACT_ADDRESS,
     contractName: CONTRACTS.OFFERS,
