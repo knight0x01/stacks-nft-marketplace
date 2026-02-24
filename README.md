@@ -34,20 +34,25 @@ A decentralized NFT marketplace built on the Stacks blockchain with support for 
 npm install
 ```
 
-## Configuration
+## Quick Start
 
-1. Copy the environment template:
+1. Configure environment:
 ```bash
 cp .env.template .env
+# Add your PRIVATE_KEY and configuration
 ```
 
-2. Update `.env` with your configuration:
-```env
-NETWORK=mainnet
-CONTRACT_ADDRESS=your_contract_deployer_address
+2. Deploy core contracts:
+```bash
+npm run deploy:core
 ```
 
-**Note**: Add your private key to `.env` file (see `.env.template` for format)
+3. Verify deployment:
+```bash
+npm run check:deployed
+```
+
+See [Deployment Guide](docs/DEPLOYMENT.md) for detailed instructions.
 
 ## Testing
 
@@ -102,11 +107,25 @@ node scripts/collection-stats.js
 
 ```
 ├── contracts/          # Clarity smart contracts
+│   ├── Core contracts (marketplace, auction, escrow, etc.)
+│   └── NFT collections (90+ popular collections)
 ├── scripts/           # Deployment and interaction scripts
-├── tests/             # Contract tests
-├── utils/             # Utility functions
+├── utils/             # Reusable utilities
+│   ├── deployer.js    # Contract deployment
+│   ├── interactor.js  # Contract interactions
+│   ├── minter.js      # NFT minting
+│   ├── marketplace.js # Marketplace operations
+│   ├── network.js     # Network utilities
+│   └── transaction.js # Transaction management
 ├── config/            # Configuration files
-└── deployments/       # Deployment artifacts
+│   ├── contracts.js   # Contract registry
+│   ├── env.js         # Environment config
+│   └── constants.js   # App constants
+├── docs/              # Documentation
+│   ├── API.md         # API reference
+│   └── DEPLOYMENT.md  # Deployment guide
+├── tests/             # Contract tests
+└── frontend/          # Web interface
 ```
 
 ## Contributing
