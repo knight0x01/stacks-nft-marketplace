@@ -1,19 +1,40 @@
 import { openContractCall } from '@stacks/connect';
 import { 
   uintCV, 
-  principalCV, 
   contractPrincipalCV,
   PostConditionMode,
   AnchorMode,
   makeStandardSTXPostCondition,
   FungibleConditionCode,
 } from '@stacks/transactions';
-import { network, userSession } from './wallet.js';
+import { network, userSession, getAddress } from './wallet.js';
 
 const CONTRACT_ADDRESS = 'SP1EPS1JHVHZ3MZRVY3381PDJJJ8PAFTDHMWAGK8P';
 const MARKETPLACE_CONTRACT = 'nft-marketplace-v2';
 const AUCTION_CONTRACT = 'nft-auction-v2';
 const OFFERS_CONTRACT = 'nft-offers-v2';
+
+async function callContract(contractName, functionName, functionArgs, postConditions = []) {
+  return new Promise((resolve, reject) => {
+    openContractCall({
+      network,
+      anchorMode: AnchorMode.Any,
+      contractAddress: CONTRACT_ADDRESS,
+      contractName,
+      functionName,
+      functionArgs,
+      postConditions,
+      postConditionMode: postConditions.length > 0 ? PostConditionMode.Deny : PostConditionMode.Allow,
+      onFinish: (data) => {
+        console.log('Transaction submitted:', data.txId);
+        resolve(data);
+      },
+      onCancel: () => {
+        reject(new Error('Transaction cancelled'));
+      },
+    });
+  });
+}
 
 // Marketplace Functions
 export async function listNFT(nftContract, tokenId, price, expiry) {
@@ -24,23 +45,12 @@ export async function listNFT(nftContract, tokenId, price, expiry) {
     uintCV(expiry),
   ];
 
-  return openContractCall({
-    network,
-    anchorMode: AnchorMode.Any,
-    contractAddress: CONTRACT_ADDRESS,
-    contractName: MARKETPLACE_CONTRACT,
-    functionName: 'list-nft',
-    functionArgs,
-    postConditionMode: PostConditionMode.Deny,
-    onFinish: (data) => {
-      console.log('Transaction:', data.txId);
-      return data;
-    },
-  });
+  return callContract(MARKETPLACE_CONTRACT, 'list-nft', functionArgs);
 }
 
-export async function buyNFT(nftContract, listingId, price, seller) {
-  const userAddress = userSession.loadUserData().profile.stxAddress.mainnet;
+export async function buyNFT(nftContract, listingId, price) {
+  const userAddress = getAddress();
+  if (!userAddress) throw new Error('Wallet not connected');
   
   const postConditions = [
     makeStandardSTXPostCondition(
@@ -55,20 +65,7 @@ export async function buyNFT(nftContract, listingId, price, seller) {
     uintCV(listingId),
   ];
 
-  return openContractCall({
-    network,
-    anchorMode: AnchorMode.Any,
-    contractAddress: CONTRACT_ADDRESS,
-    contractName: MARKETPLACE_CONTRACT,
-    functionName: 'buy-nft',
-    functionArgs,
-    postConditions,
-    postConditionMode: PostConditionMode.Deny,
-    onFinish: (data) => {
-      console.log('Purchase transaction:', data.txId);
-      return data;
-    },
-  });
+  return callContract(MARKETPLACE_CONTRACT, 'buy-nft', functionArgs, postConditions);
 }
 
 export async function unlistNFT(nftContract, listingId) {
@@ -77,37 +74,12 @@ export async function unlistNFT(nftContract, listingId) {
     uintCV(listingId),
   ];
 
-  return openContractCall({
-    network,
-    anchorMode: AnchorMode.Any,
-    contractAddress: CONTRACT_ADDRESS,
-    contractName: MARKETPLACE_CONTRACT,
-    functionName: 'unlist-nft',
-    functionArgs,
-    postConditionMode: PostConditionMode.Allow,
-    onFinish: (data) => {
-      console.log('Unlist transaction:', data.txId);
-      return data;
-    },
-  });
+  return callContract(MARKETPLACE_CONTRACT, 'unlist-nft', functionArgs);
 }
 
 export async function updatePrice(listingId, newPrice) {
   const functionArgs = [uintCV(listingId), uintCV(newPrice)];
-
-  return openContractCall({
-    network,
-    anchorMode: AnchorMode.Any,
-    contractAddress: CONTRACT_ADDRESS,
-    contractName: MARKETPLACE_CONTRACT,
-    functionName: 'update-price',
-    functionArgs,
-    postConditionMode: PostConditionMode.Allow,
-    onFinish: (data) => {
-      console.log('Update price transaction:', data.txId);
-      return data;
-    },
-  });
+  return callContract(MARKETPLACE_CONTRACT, 'update-price', functionArgs);
 }
 
 // Auction Functions
@@ -119,23 +91,12 @@ export async function createAuction(nftContract, tokenId, reservePrice, duration
     uintCV(duration),
   ];
 
-  return openContractCall({
-    network,
-    anchorMode: AnchorMode.Any,
-    contractAddress: CONTRACT_ADDRESS,
-    contractName: AUCTION_CONTRACT,
-    functionName: 'create-auction',
-    functionArgs,
-    postConditionMode: PostConditionMode.Deny,
-    onFinish: (data) => {
-      console.log('Auction created:', data.txId);
-      return data;
-    },
-  });
+  return callContract(AUCTION_CONTRACT, 'create-auction', functionArgs);
 }
 
 export async function placeBid(auctionId, bidAmount) {
-  const userAddress = userSession.loadUserData().profile.stxAddress.mainnet;
+  const userAddress = getAddress();
+  if (!userAddress) throw new Error('Wallet not connected');
   
   const postConditions = [
     makeStandardSTXPostCondition(
@@ -146,26 +107,13 @@ export async function placeBid(auctionId, bidAmount) {
   ];
 
   const functionArgs = [uintCV(auctionId), uintCV(bidAmount)];
-
-  return openContractCall({
-    network,
-    anchorMode: AnchorMode.Any,
-    contractAddress: CONTRACT_ADDRESS,
-    contractName: AUCTION_CONTRACT,
-    functionName: 'place-bid',
-    functionArgs,
-    postConditions,
-    postConditionMode: PostConditionMode.Deny,
-    onFinish: (data) => {
-      console.log('Bid placed:', data.txId);
-      return data;
-    },
-  });
+  return callContract(AUCTION_CONTRACT, 'place-bid', functionArgs, postConditions);
 }
 
 // Offers Functions
 export async function makeOffer(nftContract, tokenId, amount, expiry) {
-  const userAddress = userSession.loadUserData().profile.stxAddress.mainnet;
+  const userAddress = getAddress();
+  if (!userAddress) throw new Error('Wallet not connected');
   
   const postConditions = [
     makeStandardSTXPostCondition(
@@ -176,26 +124,13 @@ export async function makeOffer(nftContract, tokenId, amount, expiry) {
   ];
 
   const functionArgs = [
-    principalCV(CONTRACT_ADDRESS + '.' + nftContract),
+    contractPrincipalCV(CONTRACT_ADDRESS, nftContract),
     uintCV(tokenId),
     uintCV(amount),
     uintCV(expiry),
   ];
 
-  return openContractCall({
-    network,
-    anchorMode: AnchorMode.Any,
-    contractAddress: CONTRACT_ADDRESS,
-    contractName: OFFERS_CONTRACT,
-    functionName: 'make-offer',
-    functionArgs,
-    postConditions,
-    postConditionMode: PostConditionMode.Deny,
-    onFinish: (data) => {
-      console.log('Offer made:', data.txId);
-      return data;
-    },
-  });
+  return callContract(OFFERS_CONTRACT, 'make-offer', functionArgs, postConditions);
 }
 
 export async function acceptOffer(nftContract, offerId) {
@@ -204,17 +139,5 @@ export async function acceptOffer(nftContract, offerId) {
     uintCV(offerId),
   ];
 
-  return openContractCall({
-    network,
-    anchorMode: AnchorMode.Any,
-    contractAddress: CONTRACT_ADDRESS,
-    contractName: OFFERS_CONTRACT,
-    functionName: 'accept-offer',
-    functionArgs,
-    postConditionMode: PostConditionMode.Deny,
-    onFinish: (data) => {
-      console.log('Offer accepted:', data.txId);
-      return data;
-    },
-  });
+  return callContract(OFFERS_CONTRACT, 'accept-offer', functionArgs);
 }
