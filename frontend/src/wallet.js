@@ -1,48 +1,34 @@
-import { AppConfig, UserSession, showConnect } from '@stacks/connect';
-import { StacksMainnet, StacksTestnet } from '@stacks/network';
-
-const appConfig = new AppConfig(['store_write', 'publish_data']);
-export const userSession = new UserSession({ appConfig });
+import { connect, disconnect, isConnected, getLocalStorage } from '@stacks/connect';
+import { StacksMainnet } from '@stacks/network';
 
 export const network = new StacksMainnet();
 
-export function connectWallet() {
-  return new Promise((resolve, reject) => {
-    showConnect({
-      appDetails: {
-        name: 'Stacks NFT Marketplace',
-        icon: window.location.origin + '/logo.png',
-      },
-      redirectTo: '/',
-      onFinish: (data) => {
-        console.log('Wallet connected:', data);
-        resolve(data);
-      },
-      onCancel: () => {
-        console.log('Connection cancelled');
-        reject(new Error('User cancelled'));
-      },
-      userSession,
-    });
-  });
+export async function connectWallet() {
+  if (isConnected()) {
+    console.log('Already authenticated');
+    return getLocalStorage();
+  }
+
+  const response = await connect();
+  console.log('Connected:', response.addresses);
+  return response;
 }
 
 export function disconnectWallet() {
-  userSession.signUserOut();
+  disconnect();
   window.location.reload();
 }
 
 export function isSignedIn() {
-  return userSession.isUserSignedIn();
+  return isConnected();
 }
 
 export function getUserData() {
-  if (!isSignedIn()) return null;
-  return userSession.loadUserData();
+  return getLocalStorage();
 }
 
 export function getAddress() {
   const userData = getUserData();
-  if (!userData) return null;
-  return userData.profile.stxAddress.mainnet;
+  if (!userData?.addresses) return null;
+  return userData.addresses.stx[0].address;
 }
