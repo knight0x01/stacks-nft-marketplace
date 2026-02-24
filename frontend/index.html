@@ -1,21 +1,92 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="description" content="Decentralized NFT marketplace on Stacks blockchain">
-    <title>Stacks NFT Marketplace</title>
-    <link rel="stylesheet" href="styles/variables.css">
-    <link rel="stylesheet" href="styles/main.css">
-    <link rel="stylesheet" href="styles/nft-card.css">
-    <link rel="stylesheet" href="styles/modal.css">
-    <link rel="stylesheet" href="styles/form.css">
-    <link rel="stylesheet" href="styles/notifications.css">
-    <link rel="stylesheet" href="styles/sections.css">
-    <link rel="stylesheet" href="styles/loader.css">
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Stacks NFT Marketplace</title>
+  <link rel="stylesheet" href="styles/app.css">
 </head>
 <body>
-    <div id="app"></div>
-    <script type="module" src="src/index.js"></script>
+  <header>
+    <div class="container">
+      <h1>🎨 Stacks NFT Marketplace</h1>
+      <div class="wallet-section">
+        <span id="user-address"></span>
+        <button id="connect-wallet" class="btn btn-primary">Connect Wallet</button>
+        <button id="disconnect-wallet" class="btn btn-secondary hidden">Disconnect</button>
+      </div>
+    </div>
+  </header>
+
+  <main class="container">
+    <div id="marketplace-actions" class="hidden">
+      
+      <!-- List NFT -->
+      <section class="card">
+        <h2>📝 List NFT</h2>
+        <form id="list-nft-form">
+          <input type="text" name="nft-contract" placeholder="NFT Contract Name" required>
+          <input type="number" name="token-id" placeholder="Token ID" required>
+          <input type="number" name="price" placeholder="Price (STX)" step="0.000001" required>
+          <input type="number" name="expiry" placeholder="Expiry Block" required>
+          <button type="submit" class="btn btn-primary">List NFT</button>
+        </form>
+      </section>
+
+      <!-- Buy NFT -->
+      <section class="card">
+        <h2>🛒 Buy NFT</h2>
+        <form id="buy-nft-form">
+          <input type="text" name="nft-contract" placeholder="NFT Contract Name" required>
+          <input type="number" name="listing-id" placeholder="Listing ID" required>
+          <input type="number" name="price" placeholder="Price (STX)" step="0.000001" required>
+          <input type="text" name="seller" placeholder="Seller Address" required>
+          <button type="submit" class="btn btn-primary">Buy NFT</button>
+        </form>
+      </section>
+
+      <!-- Create Auction -->
+      <section class="card">
+        <h2>⚡ Create Auction</h2>
+        <form id="create-auction-form">
+          <input type="text" name="nft-contract" placeholder="NFT Contract Name" required>
+          <input type="number" name="token-id" placeholder="Token ID" required>
+          <input type="number" name="reserve-price" placeholder="Reserve Price (STX)" step="0.000001" required>
+          <input type="number" name="duration" placeholder="Duration (blocks)" required>
+          <button type="submit" class="btn btn-primary">Create Auction</button>
+        </form>
+      </section>
+
+      <!-- Place Bid -->
+      <section class="card">
+        <h2>💰 Place Bid</h2>
+        <form id="place-bid-form">
+          <input type="number" name="auction-id" placeholder="Auction ID" required>
+          <input type="number" name="bid-amount" placeholder="Bid Amount (STX)" step="0.000001" required>
+          <button type="submit" class="btn btn-primary">Place Bid</button>
+        </form>
+      </section>
+
+      <!-- Make Offer -->
+      <section class="card">
+        <h2>💎 Make Offer</h2>
+        <form id="make-offer-form">
+          <input type="text" name="nft-contract" placeholder="NFT Contract Name" required>
+          <input type="number" name="token-id" placeholder="Token ID" required>
+          <input type="number" name="offer-amount" placeholder="Offer Amount (STX)" step="0.000001" required>
+          <input type="number" name="expiry" placeholder="Expiry Block" required>
+          <button type="submit" class="btn btn-primary">Make Offer</button>
+        </form>
+      </section>
+
+    </div>
+
+    <div id="welcome-message">
+      <h2>Welcome to Stacks NFT Marketplace</h2>
+      <p>Connect your wallet to start trading NFTs</p>
+    </div>
+  </main>
+
+  <script type="module" src="src/app.js"></script>
 </body>
 </html>

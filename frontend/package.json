@@ -8,9 +8,9 @@
     "preview": "vite preview"
   },
   "dependencies": {
-    "@stacks/connect": "^7.8.2",
-    "@stacks/transactions": "^6.13.1",
-    "@stacks/network": "^6.13.0"
+    "@stacks/connect": "^7.10.2",
+    "@stacks/network": "^6.17.0",
+    "@stacks/transactions": "^6.17.0"
   },
   "devDependencies": {
     "vite": "^5.0.0"
