@@ -245,11 +245,12 @@ input:focus {
 @media (max-width: 768px) {
   header .container {
     flex-direction: column;
-    gap: 15px;
+    gap: 16px;
+    padding: 16px;
   }
   
   h1 {
-    font-size: 22px;
+    font-size: 24px;
   }
   
   .wallet-section {
@@ -262,10 +263,28 @@ input:focus {
   }
   
   .card {
-    padding: 20px;
+    padding: 24px;
+  }
+  
+  .cards-grid {
+    grid-template-columns: 1fr;
   }
   
   input {
-    font-size: 16px; /* Prevents zoom on iOS */
+    font-size: 16px;
+  }
+  
+  #welcome-message {
+    padding: 48px 24px;
+  }
+  
+  #welcome-message h2 {
+    font-size: 28px;
+  }
+  
+  .notification {
+    right: 16px;
+    left: 16px;
+    max-width: none;
   }
 }
