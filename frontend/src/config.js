@@ -1,7 +1,18 @@
-import { StacksMainnet } from '@stacks/network';
+export const CONFIG = {
+  CONTRACT_ADDRESS: 'SP1EPS1JHVHZ3MZRVY3381PDJJJ8PAFTDHMWAGK8P',
+  CONTRACTS: {
+    MARKETPLACE: 'nft-marketplace-v2',
+    AUCTION: 'nft-auction-v2',
+    OFFERS: 'nft-offers-v2',
+  },
+  NETWORK: 'mainnet',
+  EXPLORER_URL: 'https://explorer.hiro.so',
+};
 
-export const NETWORK = new StacksMainnet();
-export const CONTRACT_ADDRESS = 'SP1EPS1JHVHZ3MZRVY3381PDJJJ8PAFTDHMWAGK8P';
-export const MARKETPLACE_CONTRACT = 'nft-marketplace';
-export const AUCTION_CONTRACT = 'nft-auction';
-export const ESCROW_CONTRACT = 'nft-escrow';
+export function getContractIdentifier(contractName) {
+  return `${CONFIG.CONTRACT_ADDRESS}.${contractName}`;
+}
+
+export function getTxUrl(txId) {
+  return `${CONFIG.EXPLORER_URL}/txid/${txId}`;
+}

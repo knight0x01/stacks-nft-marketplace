@@ -7,12 +7,10 @@ import {
   makeStandardSTXPostCondition,
   FungibleConditionCode,
 } from '@stacks/transactions';
-import { network, userSession, getAddress } from './wallet.js';
+import { network, getAddress } from './wallet.js';
+import { CONFIG } from './config.js';
 
-const CONTRACT_ADDRESS = 'SP1EPS1JHVHZ3MZRVY3381PDJJJ8PAFTDHMWAGK8P';
-const MARKETPLACE_CONTRACT = 'nft-marketplace-v2';
-const AUCTION_CONTRACT = 'nft-auction-v2';
-const OFFERS_CONTRACT = 'nft-offers-v2';
+const { CONTRACT_ADDRESS, CONTRACTS } = CONFIG;
 
 async function callContract(contractName, functionName, functionArgs, postConditions = []) {
   return new Promise((resolve, reject) => {
@@ -45,7 +43,7 @@ export async function listNFT(nftContract, tokenId, price, expiry) {
     uintCV(expiry),
   ];
 
-  return callContract(MARKETPLACE_CONTRACT, 'list-nft', functionArgs);
+  return callContract(CONTRACTS.MARKETPLACE, 'list-nft', functionArgs);
 }
 
 export async function buyNFT(nftContract, listingId, price) {
@@ -65,7 +63,7 @@ export async function buyNFT(nftContract, listingId, price) {
     uintCV(listingId),
   ];
 
-  return callContract(MARKETPLACE_CONTRACT, 'buy-nft', functionArgs, postConditions);
+  return callContract(CONTRACTS.MARKETPLACE, 'buy-nft', functionArgs, postConditions);
 }
 
 export async function unlistNFT(nftContract, listingId) {
@@ -74,12 +72,12 @@ export async function unlistNFT(nftContract, listingId) {
     uintCV(listingId),
   ];
 
-  return callContract(MARKETPLACE_CONTRACT, 'unlist-nft', functionArgs);
+  return callContract(CONTRACTS.MARKETPLACE, 'unlist-nft', functionArgs);
 }
 
 export async function updatePrice(listingId, newPrice) {
   const functionArgs = [uintCV(listingId), uintCV(newPrice)];
-  return callContract(MARKETPLACE_CONTRACT, 'update-price', functionArgs);
+  return callContract(CONTRACTS.MARKETPLACE, 'update-price', functionArgs);
 }
 
 // Auction Functions
@@ -91,7 +89,7 @@ export async function createAuction(nftContract, tokenId, reservePrice, duration
     uintCV(duration),
   ];
 
-  return callContract(AUCTION_CONTRACT, 'create-auction', functionArgs);
+  return callContract(CONTRACTS.AUCTION, 'create-auction', functionArgs);
 }
 
 export async function placeBid(auctionId, bidAmount) {
@@ -107,7 +105,7 @@ export async function placeBid(auctionId, bidAmount) {
   ];
 
   const functionArgs = [uintCV(auctionId), uintCV(bidAmount)];
-  return callContract(AUCTION_CONTRACT, 'place-bid', functionArgs, postConditions);
+  return callContract(CONTRACTS.AUCTION, 'place-bid', functionArgs, postConditions);
 }
 
 // Offers Functions
@@ -130,7 +128,7 @@ export async function makeOffer(nftContract, tokenId, amount, expiry) {
     uintCV(expiry),
   ];
 
-  return callContract(OFFERS_CONTRACT, 'make-offer', functionArgs, postConditions);
+  return callContract(CONTRACTS.OFFERS, 'make-offer', functionArgs, postConditions);
 }
 
 export async function acceptOffer(nftContract, offerId) {
@@ -139,5 +137,5 @@ export async function acceptOffer(nftContract, offerId) {
     uintCV(offerId),
   ];
 
-  return callContract(OFFERS_CONTRACT, 'accept-offer', functionArgs);
+  return callContract(CONTRACTS.OFFERS, 'accept-offer', functionArgs);
 }
