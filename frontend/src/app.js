@@ -19,29 +19,32 @@ class MarketplaceApp {
     const disconnectBtn = document.getElementById('disconnect-wallet');
     const userAddress = document.getElementById('user-address');
     const marketplaceActions = document.getElementById('marketplace-actions');
+    const welcomeMessage = document.getElementById('welcome-message');
 
     if (signedIn && address) {
       connectBtn?.classList.add('hidden');
       disconnectBtn?.classList.remove('hidden');
       if (userAddress) userAddress.textContent = this.truncateAddress(address);
       marketplaceActions?.classList.remove('hidden');
+      welcomeMessage?.classList.add('hidden');
     } else {
       connectBtn?.classList.remove('hidden');
       disconnectBtn?.classList.add('hidden');
       if (userAddress) userAddress.textContent = '';
       marketplaceActions?.classList.add('hidden');
+      welcomeMessage?.classList.remove('hidden');
     }
   }
 
   attachEventListeners() {
-    document.getElementById('connect-wallet')?.addEventListener('click', () => {
-      connectWallet(
-        () => {
-          console.log('Wallet connected');
-          this.updateUI();
-        },
-        () => console.log('Connection cancelled')
-      );
+    document.getElementById('connect-wallet')?.addEventListener('click', async () => {
+      try {
+        await connectWallet();
+        this.updateUI();
+        this.showNotification('Wallet connected successfully!', 'success');
+      } catch (error) {
+        this.showNotification('Failed to connect wallet', 'error');
+      }
     });
 
     document.getElementById('disconnect-wallet')?.addEventListener('click', () => {
@@ -54,15 +57,16 @@ class MarketplaceApp {
       const formData = new FormData(e.target);
       
       try {
-        await listNFT(
+        const result = await listNFT(
           formData.get('nft-contract'),
           parseInt(formData.get('token-id')),
-          parseInt(formData.get('price')) * 1000000, // Convert to microSTX
+          parseInt(formData.get('price')) * 1000000,
           parseInt(formData.get('expiry'))
         );
-        this.showNotification('NFT listed successfully!', 'success');
+        this.showNotification('NFT listed! TX: ' + result.txId.slice(0, 8) + '...', 'success');
+        e.target.reset();
       } catch (error) {
-        this.showNotification('Failed to list NFT: ' + error.message, 'error');
+        this.showNotification(error.message, 'error');
       }
     });
 
@@ -72,15 +76,15 @@ class MarketplaceApp {
       const formData = new FormData(e.target);
       
       try {
-        await buyNFT(
+        const result = await buyNFT(
           formData.get('nft-contract'),
           parseInt(formData.get('listing-id')),
-          parseInt(formData.get('price')) * 1000000,
-          formData.get('seller')
+          parseInt(formData.get('price')) * 1000000
         );
-        this.showNotification('Purchase initiated!', 'success');
+        this.showNotification('Purchase initiated! TX: ' + result.txId.slice(0, 8) + '...', 'success');
+        e.target.reset();
       } catch (error) {
-        this.showNotification('Failed to buy NFT: ' + error.message, 'error');
+        this.showNotification(error.message, 'error');
       }
     });
 
@@ -90,15 +94,16 @@ class MarketplaceApp {
       const formData = new FormData(e.target);
       
       try {
-        await createAuction(
+        const result = await createAuction(
           formData.get('nft-contract'),
           parseInt(formData.get('token-id')),
           parseInt(formData.get('reserve-price')) * 1000000,
           parseInt(formData.get('duration'))
         );
-        this.showNotification('Auction created!', 'success');
+        this.showNotification('Auction created! TX: ' + result.txId.slice(0, 8) + '...', 'success');
+        e.target.reset();
       } catch (error) {
-        this.showNotification('Failed to create auction: ' + error.message, 'error');
+        this.showNotification(error.message, 'error');
       }
     });
 
@@ -108,13 +113,14 @@ class MarketplaceApp {
       const formData = new FormData(e.target);
       
       try {
-        await placeBid(
+        const result = await placeBid(
           parseInt(formData.get('auction-id')),
           parseInt(formData.get('bid-amount')) * 1000000
         );
-        this.showNotification('Bid placed!', 'success');
+        this.showNotification('Bid placed! TX: ' + result.txId.slice(0, 8) + '...', 'success');
+        e.target.reset();
       } catch (error) {
-        this.showNotification('Failed to place bid: ' + error.message, 'error');
+        this.showNotification(error.message, 'error');
       }
     });
 
@@ -124,15 +130,16 @@ class MarketplaceApp {
       const formData = new FormData(e.target);
       
       try {
-        await makeOffer(
+        const result = await makeOffer(
           formData.get('nft-contract'),
           parseInt(formData.get('token-id')),
           parseInt(formData.get('offer-amount')) * 1000000,
           parseInt(formData.get('expiry'))
         );
-        this.showNotification('Offer made!', 'success');
+        this.showNotification('Offer made! TX: ' + result.txId.slice(0, 8) + '...', 'success');
+        e.target.reset();
       } catch (error) {
-        this.showNotification('Failed to make offer: ' + error.message, 'error');
+        this.showNotification(error.message, 'error');
       }
     });
   }
