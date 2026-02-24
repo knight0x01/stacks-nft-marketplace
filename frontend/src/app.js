@@ -1,5 +1,6 @@
 import { connectWallet, disconnectWallet, isSignedIn, getAddress } from './wallet.js';
 import { listNFT, buyNFT, createAuction, placeBid, makeOffer } from './contracts.js';
+import { getTxUrl } from './config.js';
 
 class MarketplaceApp {
   constructor() {
@@ -72,7 +73,7 @@ class MarketplaceApp {
           parseInt(formData.get('price')) * 1000000,
           parseInt(formData.get('expiry'))
         );
-        this.showNotification('NFT listed! TX: ' + result.txId.slice(0, 8) + '...', 'success');
+        this.showNotification('View transaction', 'success', result.txId);
         e.target.reset();
       } catch (error) {
         this.showNotification(error.message, 'error');
@@ -160,12 +161,23 @@ class MarketplaceApp {
     return `${address.slice(0, 6)}...${address.slice(-4)}`;
   }
 
-  showNotification(message, type = 'info') {
+  showNotification(message, type = 'info', txId = null) {
     const notification = document.createElement('div');
     notification.className = `notification notification-${type}`;
-    notification.textContent = message;
-    document.body.appendChild(notification);
     
+    if (txId) {
+      const link = document.createElement('a');
+      link.href = getTxUrl(txId);
+      link.target = '_blank';
+      link.textContent = message;
+      link.style.color = 'white';
+      link.style.textDecoration = 'underline';
+      notification.appendChild(link);
+    } else {
+      notification.textContent = message;
+    }
+    
+    document.body.appendChild(notification);
     setTimeout(() => notification.remove(), 5000);
   }
 }
