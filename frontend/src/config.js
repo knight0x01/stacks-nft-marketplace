@@ -5,7 +5,7 @@ export const CONFIG = {
     AUCTION: 'nft-auction-v2',
     OFFERS: 'nft-offers-v2',
   },
-  NETWORK: 'mainnet',
+  NETWORK: 'mainnet', // 'mainnet', 'testnet', or 'devnet'
   EXPLORER_URL: 'https://explorer.hiro.so',
 };
 
@@ -14,5 +14,9 @@ export function getContractIdentifier(contractName) {
 }
 
 export function getTxUrl(txId) {
-  return `${CONFIG.EXPLORER_URL}/txid/${txId}`;
+  return `${CONFIG.EXPLORER_URL}/txid/${txId}?chain=${CONFIG.NETWORK}`;
+}
+
+export function getNetwork() {
+  return CONFIG.NETWORK;
 }

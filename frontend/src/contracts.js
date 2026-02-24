@@ -1,7 +1,7 @@
 import { request } from '@stacks/connect';
 import { Cl } from '@stacks/transactions';
 import { getAddress } from './wallet.js';
-import { CONFIG } from './config.js';
+import { CONFIG, getNetwork } from './config.js';
 
 const { CONTRACT_ADDRESS, CONTRACTS } = CONFIG;
 
@@ -11,7 +11,7 @@ export async function transferSTX(recipient, amount, memo = '') {
     recipient,
     amount: amount.toString(),
     memo,
-    network: 'mainnet',
+    network: getNetwork(),
   });
 
   return response;
@@ -29,7 +29,7 @@ export async function listNFT(nftContract, tokenId, price, expiry) {
       Cl.uint(price),
       Cl.uint(expiry),
     ],
-    network: 'mainnet',
+    network: getNetwork(),
   });
 
   return response;
@@ -44,7 +44,7 @@ export async function buyNFT(nftContract, listingId, price) {
       Cl.contractPrincipal(CONTRACT_ADDRESS, nftContract),
       Cl.uint(listingId),
     ],
-    network: 'mainnet',
+    network: getNetwork(),
   });
 
   return response;
@@ -59,7 +59,7 @@ export async function unlistNFT(nftContract, listingId) {
       Cl.contractPrincipal(CONTRACT_ADDRESS, nftContract),
       Cl.uint(listingId),
     ],
-    network: 'mainnet',
+    network: getNetwork(),
   });
 
   return response;
@@ -74,7 +74,7 @@ export async function updatePrice(listingId, newPrice) {
       Cl.uint(listingId),
       Cl.uint(newPrice),
     ],
-    network: 'mainnet',
+    network: getNetwork(),
   });
 
   return response;
@@ -92,7 +92,7 @@ export async function createAuction(nftContract, tokenId, reservePrice, duration
       Cl.uint(reservePrice),
       Cl.uint(duration),
     ],
-    network: 'mainnet',
+    network: getNetwork(),
   });
 
   return response;
@@ -107,7 +107,7 @@ export async function placeBid(auctionId, bidAmount) {
       Cl.uint(auctionId),
       Cl.uint(bidAmount),
     ],
-    network: 'mainnet',
+    network: getNetwork(),
   });
 
   return response;
@@ -125,7 +125,7 @@ export async function makeOffer(nftContract, tokenId, amount, expiry) {
       Cl.uint(amount),
       Cl.uint(expiry),
     ],
-    network: 'mainnet',
+    network: getNetwork(),
   });
 
   return response;
@@ -140,7 +140,7 @@ export async function acceptOffer(nftContract, offerId) {
       Cl.contractPrincipal(CONTRACT_ADDRESS, nftContract),
       Cl.uint(offerId),
     ],
-    network: 'mainnet',
+    network: getNetwork(),
   });
 
   return response;
