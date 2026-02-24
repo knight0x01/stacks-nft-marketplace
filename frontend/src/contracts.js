@@ -28,9 +28,12 @@ async function callContract(contractName, functionName, functionArgs, postCondit
         resolve(data);
       },
       onCancel: () => {
-        reject(new Error('Transaction cancelled'));
+        reject(new Error('Transaction was cancelled by user'));
       },
     });
+  }).catch(error => {
+    console.error('Contract call error:', error);
+    throw new Error(error.message || 'Transaction failed');
   });
 }
 
