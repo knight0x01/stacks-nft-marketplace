@@ -1,4 +1,4 @@
-import { connect, disconnect, isConnected, getLocalStorage } from '@stacks/connect';
+import { connect, disconnect, isConnected, getLocalStorage, request } from '@stacks/connect';
 import { StacksMainnet } from '@stacks/network';
 
 export const network = new StacksMainnet();
@@ -31,4 +31,14 @@ export function getAddress() {
   const userData = getUserData();
   if (!userData?.addresses) return null;
   return userData.addresses.stx[0].address;
+}
+
+export async function getAccountDetails() {
+  const accounts = await request('stx_getAccounts');
+  const account = accounts.addresses[0];
+  return {
+    address: account.address,
+    publicKey: account.publicKey,
+    gaiaHubUrl: account.gaiaHubUrl,
+  };
 }
