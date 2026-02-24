@@ -24,11 +24,12 @@
       <!-- List NFT -->
       <section class="card">
         <h2>📝 List NFT</h2>
+        <p class="help-text">List your NFT for sale on the marketplace</p>
         <form id="list-nft-form">
-          <input type="text" name="nft-contract" placeholder="NFT Contract Name" required>
-          <input type="number" name="token-id" placeholder="Token ID" required>
-          <input type="number" name="price" placeholder="Price (STX)" step="0.000001" required>
-          <input type="number" name="expiry" placeholder="Expiry Block" required>
+          <input type="text" name="nft-contract" placeholder="example-nft" required>
+          <input type="number" name="token-id" placeholder="Token ID (e.g., 1)" required>
+          <input type="number" name="price" placeholder="Price in STX (e.g., 10)" step="0.000001" required>
+          <input type="number" name="expiry" placeholder="Expiry Block (e.g., 150000)" required>
           <button type="submit" class="btn btn-primary">List NFT</button>
         </form>
       </section>
@@ -36,10 +37,11 @@
       <!-- Buy NFT -->
       <section class="card">
         <h2>🛒 Buy NFT</h2>
+        <p class="help-text">Purchase a listed NFT from the marketplace</p>
         <form id="buy-nft-form">
-          <input type="text" name="nft-contract" placeholder="NFT Contract Name" required>
-          <input type="number" name="listing-id" placeholder="Listing ID" required>
-          <input type="number" name="price" placeholder="Price (STX)" step="0.000001" required>
+          <input type="text" name="nft-contract" placeholder="example-nft" required>
+          <input type="number" name="listing-id" placeholder="Listing ID (e.g., 1)" required>
+          <input type="number" name="price" placeholder="Price in STX (e.g., 10)" step="0.000001" required>
           <button type="submit" class="btn btn-primary">Buy NFT</button>
         </form>
       </section>
