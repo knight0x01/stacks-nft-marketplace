@@ -4,20 +4,26 @@ import { StacksMainnet, StacksTestnet } from '@stacks/network';
 const appConfig = new AppConfig(['store_write', 'publish_data']);
 export const userSession = new UserSession({ appConfig });
 
-export const network = process.env.NETWORK === 'testnet' 
-  ? new StacksTestnet() 
-  : new StacksMainnet();
+export const network = new StacksMainnet();
 
-export function connectWallet(onFinish, onCancel) {
-  showConnect({
-    appDetails: {
-      name: 'Stacks NFT Marketplace',
-      icon: window.location.origin + '/logo.png',
-    },
-    redirectTo: '/',
-    onFinish,
-    onCancel,
-    userSession,
+export function connectWallet() {
+  return new Promise((resolve, reject) => {
+    showConnect({
+      appDetails: {
+        name: 'Stacks NFT Marketplace',
+        icon: window.location.origin + '/logo.png',
+      },
+      redirectTo: '/',
+      onFinish: (data) => {
+        console.log('Wallet connected:', data);
+        resolve(data);
+      },
+      onCancel: () => {
+        console.log('Connection cancelled');
+        reject(new Error('User cancelled'));
+      },
+      userSession,
+    });
   });
 }
 
@@ -26,16 +32,17 @@ export function disconnectWallet() {
   window.location.reload();
 }
 
+export function isSignedIn() {
+  return userSession.isUserSignedIn();
+}
+
 export function getUserData() {
-  if (!userSession.isUserSignedIn()) return null;
+  if (!isSignedIn()) return null;
   return userSession.loadUserData();
 }
 
 export function getAddress() {
   const userData = getUserData();
-  return userData?.profile?.stxAddress?.mainnet || userData?.profile?.stxAddress?.testnet;
-}
-
-export function isSignedIn() {
-  return userSession.isUserSignedIn();
+  if (!userData) return null;
+  return userData.profile.stxAddress.mainnet;
 }
