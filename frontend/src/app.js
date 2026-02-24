@@ -105,17 +105,24 @@ class MarketplaceApp {
     document.getElementById('buy-nft-form')?.addEventListener('submit', async (e) => {
       e.preventDefault();
       const formData = new FormData(e.target);
+      const btn = e.target.querySelector('button[type="submit"]');
+      btn.disabled = true;
+      btn.textContent = 'Buying...';
       
       try {
+        this.validateForm(formData);
         const result = await buyNFT(
           formData.get('nft-contract'),
           parseInt(formData.get('listing-id')),
           parseInt(formData.get('price')) * 1000000
         );
-        this.showNotification('Purchase initiated! TX: ' + result.txId.slice(0, 8) + '...', 'success');
+        this.showNotification('View transaction', 'success', result.txId);
         e.target.reset();
       } catch (error) {
         this.showNotification(error.message, 'error');
+      } finally {
+        btn.disabled = false;
+        btn.textContent = 'Buy NFT';
       }
     });
 
@@ -123,18 +130,25 @@ class MarketplaceApp {
     document.getElementById('create-auction-form')?.addEventListener('submit', async (e) => {
       e.preventDefault();
       const formData = new FormData(e.target);
+      const btn = e.target.querySelector('button[type="submit"]');
+      btn.disabled = true;
+      btn.textContent = 'Creating...';
       
       try {
+        this.validateForm(formData);
         const result = await createAuction(
           formData.get('nft-contract'),
           parseInt(formData.get('token-id')),
           parseInt(formData.get('reserve-price')) * 1000000,
           parseInt(formData.get('duration'))
         );
-        this.showNotification('Auction created! TX: ' + result.txId.slice(0, 8) + '...', 'success');
+        this.showNotification('View transaction', 'success', result.txId);
         e.target.reset();
       } catch (error) {
         this.showNotification(error.message, 'error');
+      } finally {
+        btn.disabled = false;
+        btn.textContent = 'Create Auction';
       }
     });
 
@@ -142,16 +156,23 @@ class MarketplaceApp {
     document.getElementById('place-bid-form')?.addEventListener('submit', async (e) => {
       e.preventDefault();
       const formData = new FormData(e.target);
+      const btn = e.target.querySelector('button[type="submit"]');
+      btn.disabled = true;
+      btn.textContent = 'Placing Bid...';
       
       try {
+        this.validateForm(formData);
         const result = await placeBid(
           parseInt(formData.get('auction-id')),
           parseInt(formData.get('bid-amount')) * 1000000
         );
-        this.showNotification('Bid placed! TX: ' + result.txId.slice(0, 8) + '...', 'success');
+        this.showNotification('View transaction', 'success', result.txId);
         e.target.reset();
       } catch (error) {
         this.showNotification(error.message, 'error');
+      } finally {
+        btn.disabled = false;
+        btn.textContent = 'Place Bid';
       }
     });
 
@@ -159,18 +180,25 @@ class MarketplaceApp {
     document.getElementById('make-offer-form')?.addEventListener('submit', async (e) => {
       e.preventDefault();
       const formData = new FormData(e.target);
+      const btn = e.target.querySelector('button[type="submit"]');
+      btn.disabled = true;
+      btn.textContent = 'Making Offer...';
       
       try {
+        this.validateForm(formData);
         const result = await makeOffer(
           formData.get('nft-contract'),
           parseInt(formData.get('token-id')),
           parseInt(formData.get('offer-amount')) * 1000000,
           parseInt(formData.get('expiry'))
         );
-        this.showNotification('Offer made! TX: ' + result.txId.slice(0, 8) + '...', 'success');
+        this.showNotification('View transaction', 'success', result.txId);
         e.target.reset();
       } catch (error) {
         this.showNotification(error.message, 'error');
+      } finally {
+        btn.disabled = false;
+        btn.textContent = 'Make Offer';
       }
     });
   }
