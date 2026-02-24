@@ -26,10 +26,28 @@ Open http://localhost:5173
 
 ## Technologies
 
-- **@stacks/connect** v7.10.2 - Wallet connection
-- **@stacks/transactions** v6.17.0 - Transaction building
+- **@stacks/connect** v7.10.2 - Wallet connection (official API)
+- **@stacks/transactions** v6.17.0 - Transaction building with Cl helpers
 - **@stacks/network** v6.17.0 - Network configuration
 - **Vite** v5.0.0 - Build tool
+
+## API Methods
+
+### Wallet
+- `connect()` - Connect wallet
+- `disconnect()` - Disconnect wallet
+- `isConnected()` - Check connection
+- `getLocalStorage()` - Get user data
+- `request('stx_getAccounts')` - Get account details
+
+### Transactions
+- `request('stx_transferStx', {...})` - Transfer STX
+- `request('stx_callContract', {...})` - Call contracts
+
+### Clarity Values
+- `Cl.uint()` - Unsigned integer
+- `Cl.contractPrincipal()` - Contract principal
+- `Cl.standardPrincipal()` - Standard principal
 
 ## Contract Addresses
 
