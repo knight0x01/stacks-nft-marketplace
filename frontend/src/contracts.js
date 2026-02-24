@@ -5,6 +5,18 @@ import { CONFIG } from './config.js';
 
 const { CONTRACT_ADDRESS, CONTRACTS } = CONFIG;
 
+// STX Transfer
+export async function transferSTX(recipient, amount, memo = '') {
+  const response = await request('stx_transferStx', {
+    recipient,
+    amount: amount.toString(),
+    memo,
+    network: 'mainnet',
+  });
+
+  return response;
+}
+
 // Marketplace Functions
 export async function listNFT(nftContract, tokenId, price, expiry) {
   const response = await request('stx_callContract', {
