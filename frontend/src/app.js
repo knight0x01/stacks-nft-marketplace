@@ -37,6 +37,23 @@ class MarketplaceApp {
     }
   }
 
+  validateForm(formData) {
+    const price = parseFloat(formData.get('price'));
+    if (price && price < 0.000001) {
+      throw new Error('Price must be at least 0.000001 STX');
+    }
+    
+    const tokenId = parseInt(formData.get('token-id'));
+    if (tokenId !== undefined && tokenId < 0) {
+      throw new Error('Token ID must be positive');
+    }
+    
+    const expiry = parseInt(formData.get('expiry'));
+    if (expiry && expiry < 100000) {
+      throw new Error('Expiry block must be a valid future block height');
+    }
+  }
+
   attachEventListeners() {
     document.getElementById('connect-wallet')?.addEventListener('click', async () => {
       const btn = document.getElementById('connect-wallet');
@@ -67,6 +84,7 @@ class MarketplaceApp {
       btn.textContent = 'Listing...';
       
       try {
+        this.validateForm(formData);
         const result = await listNFT(
           formData.get('nft-contract'),
           parseInt(formData.get('token-id')),
