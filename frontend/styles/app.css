@@ -163,7 +163,24 @@ input:focus {
     gap: 15px;
   }
   
+  h1 {
+    font-size: 22px;
+  }
+  
+  .wallet-section {
+    flex-direction: column;
+    width: 100%;
+  }
+  
+  .btn {
+    width: 100%;
+  }
+  
   .card {
     padding: 20px;
+  }
+  
+  input {
+    font-size: 16px; /* Prevents zoom on iOS */
   }
 }
