@@ -58,7 +58,7 @@ class MarketplaceApp {
     document.getElementById('connect-wallet')?.addEventListener('click', async () => {
       const btn = document.getElementById('connect-wallet');
       btn.disabled = true;
-      btn.textContent = 'Connecting...';
+      btn.classList.add('loading');
       
       try {
         await connectWallet();
@@ -66,8 +66,9 @@ class MarketplaceApp {
         this.showNotification('Wallet connected successfully!', 'success');
       } catch (error) {
         this.showNotification('Failed to connect wallet', 'error');
+      } finally {
         btn.disabled = false;
-        btn.textContent = 'Connect Wallet';
+        btn.classList.remove('loading');
       }
     });
 
@@ -81,7 +82,7 @@ class MarketplaceApp {
       const formData = new FormData(e.target);
       const btn = e.target.querySelector('button[type="submit"]');
       btn.disabled = true;
-      btn.textContent = 'Listing...';
+      btn.classList.add('loading');
       
       try {
         this.validateForm(formData);
@@ -97,7 +98,7 @@ class MarketplaceApp {
         this.showNotification(error.message, 'error');
       } finally {
         btn.disabled = false;
-        btn.textContent = 'List NFT';
+        btn.classList.remove('loading');
       }
     });
 
@@ -107,7 +108,7 @@ class MarketplaceApp {
       const formData = new FormData(e.target);
       const btn = e.target.querySelector('button[type="submit"]');
       btn.disabled = true;
-      btn.textContent = 'Buying...';
+      btn.classList.add('loading');
       
       try {
         this.validateForm(formData);
@@ -122,7 +123,7 @@ class MarketplaceApp {
         this.showNotification(error.message, 'error');
       } finally {
         btn.disabled = false;
-        btn.textContent = 'Buy NFT';
+        btn.classList.add('loading');
       }
     });
 
@@ -132,7 +133,7 @@ class MarketplaceApp {
       const formData = new FormData(e.target);
       const btn = e.target.querySelector('button[type="submit"]');
       btn.disabled = true;
-      btn.textContent = 'Creating...';
+      btn.classList.add('loading');
       
       try {
         this.validateForm(formData);
@@ -148,7 +149,7 @@ class MarketplaceApp {
         this.showNotification(error.message, 'error');
       } finally {
         btn.disabled = false;
-        btn.textContent = 'Create Auction';
+        btn.classList.add('loading');
       }
     });
 
@@ -158,7 +159,7 @@ class MarketplaceApp {
       const formData = new FormData(e.target);
       const btn = e.target.querySelector('button[type="submit"]');
       btn.disabled = true;
-      btn.textContent = 'Placing Bid...';
+      btn.classList.add('loading');
       
       try {
         this.validateForm(formData);
@@ -172,7 +173,7 @@ class MarketplaceApp {
         this.showNotification(error.message, 'error');
       } finally {
         btn.disabled = false;
-        btn.textContent = 'Place Bid';
+        btn.classList.add('loading');
       }
     });
 
@@ -182,7 +183,7 @@ class MarketplaceApp {
       const formData = new FormData(e.target);
       const btn = e.target.querySelector('button[type="submit"]');
       btn.disabled = true;
-      btn.textContent = 'Making Offer...';
+      btn.classList.add('loading');
       
       try {
         this.validateForm(formData);
@@ -198,7 +199,7 @@ class MarketplaceApp {
         this.showNotification(error.message, 'error');
       } finally {
         btn.disabled = false;
-        btn.textContent = 'Make Offer';
+        btn.classList.add('loading');
       }
     });
   }
