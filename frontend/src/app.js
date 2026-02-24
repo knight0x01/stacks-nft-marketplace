@@ -208,6 +208,9 @@ class MarketplaceApp {
   }
 
   showNotification(message, type = 'info', txId = null) {
+    // Remove existing notifications
+    document.querySelectorAll('.notification').forEach(n => n.remove());
+    
     const notification = document.createElement('div');
     notification.className = `notification notification-${type}`;
     
@@ -215,6 +218,7 @@ class MarketplaceApp {
       const link = document.createElement('a');
       link.href = getTxUrl(txId);
       link.target = '_blank';
+      link.rel = 'noopener noreferrer';
       link.textContent = message;
       link.style.color = 'white';
       link.style.textDecoration = 'underline';
